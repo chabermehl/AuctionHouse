@@ -48,13 +48,15 @@ public class AuctionHouse {
         // t1 = record the time
         // make a private class that has a thread which loop via a constant time and auction a new thing and check for the time
         // loop does things
+
+
         // wait for a command to terminate
+        closeBankAccount();
     }
 
-    public synchronized void bid(int key,String name,double amount)
-    {
+    public synchronized void bid(int key,String name,double amount) { }
 
-    }
+    public void closeBankAccount() {}
 
     public Map<String, Double> getItems(){
         return null;
@@ -68,6 +70,9 @@ public class AuctionHouse {
         // accept the bid from agent proxy
         // remove funds from acount
     }
+
+    // Bid is rejected if the incoming bid doesn't meet the minimum required,
+    // or agent tries to bid with more money than they have
     public void rejectBid(int key,String item){
         // reject the bid from agent proxy
         // unblock the money from bank proxy

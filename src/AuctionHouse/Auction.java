@@ -3,6 +3,7 @@ package AuctionHouse;
 /**
  * Should only be used by the auction house
  * stores all data related to an auction
+ * Might be able to just make this a private class
  */
 public class Auction {
     private String itemName; // Name of item being sold

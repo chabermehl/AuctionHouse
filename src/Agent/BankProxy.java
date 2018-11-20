@@ -1,7 +1,7 @@
 package Agent;
 
 public class BankProxy {
-    public int createAcount(int initialBalance){
+    public int createAcount(int initialBalance,String ip,boolean auctionHouse){
         return 0;
     }
     public int getKey(int acountNum){
@@ -13,7 +13,7 @@ public class BankProxy {
     public void deposit(int amount){
 
     }
-    public boolean lockBalance(int amount){
+    public boolean lockBalance(int key,int amount){
         return false;
     }
     public void releaseLock(int amount){

@@ -4,6 +4,9 @@ import Agent.BankProxy;
 import java.util.LinkedList;
 import java.util.Map;
 
+/**
+ * The auction house has
+ */
 public class AuctionHouse {
 
     // All of the active auctions in this house.

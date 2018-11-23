@@ -21,22 +21,20 @@ public class AuctionHouse {
     private String bankIP;
     private int bankPort;
 
-    // Use this for creating house ids
-    private static int houseCount = 0;
+    // Use this for creating unique house ids
     private int houseID;
 
     public static void main(String[] args)
     {
-        AuctionHouse auctionHouse = new AuctionHouse("Insert bank ip here", 2224);
+        AuctionHouse auctionHouse = new AuctionHouse(0,"Insert bank ip here", 2224);
         auctionHouse.run();
     }
 
-    public AuctionHouse(String bankIP, int bankPort)
+    public AuctionHouse(int houseID, String bankIP, int bankPort)
     {
         this.bankIP = bankIP;
         this.bankPort = bankPort;
-        houseCount++;
-        houseID = houseCount;
+        this.houseID = houseID;
     }
 
     public void run()
@@ -46,7 +44,6 @@ public class AuctionHouse {
         // createBankAccount()
 
         // Make a list of auctioned items for testing
-        addAuction(new Auction("Crab Cakes", "I made too many", 2.00));
         // t1 = record the time
         // make a private class that has a thread which loop via a constant time and auction a new thing and check for the time
         // loop does things

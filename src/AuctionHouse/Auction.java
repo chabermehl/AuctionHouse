@@ -6,7 +6,7 @@ import java.time.Instant;
 /**
  * Should only be used by the auction house
  * stores all data related to an auction
- * Might be able to just make this a private class
+ * Runs on its own thread
  */
 public class Auction extends Thread {
 
@@ -18,10 +18,17 @@ public class Auction extends Thread {
     private volatile boolean hasBeenBiddedOn = false;
     private Instant beginTime;
 
+    private static long auctionCount = 0;
+    private long auctionID;
+
+
+
     public Auction(String itemName, String description, double minimumBid) {
         this.itemName = itemName;
         this.description = description;
         this.minimumBid = minimumBid;
+
+        auctionID = auctionCount++;
     }
 
     public synchronized void setBid(int bidderKey, double amount) {

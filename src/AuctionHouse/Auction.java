@@ -26,11 +26,10 @@ public class Auction extends Thread {
 
     public synchronized void setBid(int bidderKey, double amount) {
         // Start the timer if bidding has begun
-        if(currentBidderKey == 0) {
-            beginTime = Instant.now();
-            hasBeenBiddedOn = true;
-            System.out.println("Timer started for auction " + itemName);
-        }
+        beginTime = Instant.now();
+        hasBeenBiddedOn = true;
+        System.out.println("Timer started for auction " + itemName);
+
         currentBidderKey = bidderKey;
         currentBid = amount;
     }

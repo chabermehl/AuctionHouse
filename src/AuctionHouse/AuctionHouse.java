@@ -60,12 +60,6 @@ public class AuctionHouse {
     {
         currentAuctions.add(auction);
         auction.start();
-        try {
-            sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        auction.setBid(348943899, 20);
     }
 
     public synchronized void bid(int key,String name,double amount) { }

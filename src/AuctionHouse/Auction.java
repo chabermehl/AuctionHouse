@@ -9,6 +9,7 @@ import java.time.Instant;
  * Might be able to just make this a private class
  */
 public class Auction extends Thread {
+
     private String itemName; // Name of item being sold
     private String description; // Description of item
     private double currentBid; // Current highest bid

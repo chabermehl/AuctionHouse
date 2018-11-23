@@ -4,6 +4,8 @@ import Agent.BankProxy;
 import java.util.LinkedList;
 import java.util.Map;
 
+import static java.lang.Thread.sleep;
+
 /**
  * The auction house has
  */
@@ -44,10 +46,7 @@ public class AuctionHouse {
         // createBankAccount()
 
         // Make a list of auctioned items for testing
-        currentAuctions.add(new Auction("Crab Cakes", "I made too many", 2.00));
-        currentAuctions.add(new Auction("Packet of Stevia", "This stuff is too voodoo for me", 37.00));
-        currentAuctions.add(new Auction("Bike With One Wheel", "I dunno", 18.0));
-
+        addAuction(new Auction("Crab Cakes", "I made too many", 2.00));
         // t1 = record the time
         // make a private class that has a thread which loop via a constant time and auction a new thing and check for the time
         // loop does things
@@ -55,6 +54,18 @@ public class AuctionHouse {
 
         // wait for a command to terminate
         closeBankAccount();
+    }
+
+    private void addAuction(Auction auction)
+    {
+        currentAuctions.add(auction);
+        auction.start();
+        try {
+            sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        auction.setBid(348943899, 20);
     }
 
     public synchronized void bid(int key,String name,double amount) { }

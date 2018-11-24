@@ -1,5 +1,8 @@
 package Agent;
 
+import java.util.LinkedList;
+import java.util.Map;
+
 public class BankProxy {
     public int createAcount(int initialBalance,String ip,boolean auctionHouse){
         return 0;
@@ -21,5 +24,11 @@ public class BankProxy {
     }
     public void closeAcount(int acountNum){
 
+    }
+    public Map<Integer,String> getAuctionHouses(){
+        return null;
+    }
+    public String getAuctionHouseIp(int id){
+        return null;
     }
 }

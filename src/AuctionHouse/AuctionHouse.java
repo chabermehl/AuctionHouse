@@ -62,8 +62,8 @@ public class AuctionHouse {
     public synchronized void bid(int key,String name,double amount) { }
 
     public void closeBankAccount() {}
-
-    public Map<String, Double> getItems(){
+    // item format is: (house id, item id, description, minimum bid, current bid)
+    public LinkedList<LinkedList<String>> getItems(){
         return null;
     }
 

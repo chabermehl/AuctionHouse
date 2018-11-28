@@ -2,11 +2,13 @@ package Bank;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -37,6 +39,11 @@ public class SpinUpBankServer extends Application {
         portNum.getText();
         GridPane.setConstraints(portNum, 0, 0);
         grid.getChildren().add(portNum);
+
+        Button startServerButton = new Button("Start Server");
+        startServerButton.setOnAction(event -> {
+            startServer(Integer.parseInt(portNum.getText()));
+        });
 
     }
 

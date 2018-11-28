@@ -2,7 +2,6 @@ package Bank;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-
 import java.net.ServerSocket;
 import java.net.Socket;
 

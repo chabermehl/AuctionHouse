@@ -42,23 +42,25 @@ public class SpinUpBankServer extends Application {
 
         Button startServerButton = new Button("Start Server");
         startServerButton.setOnAction(event -> {
-            startServer(Integer.parseInt(portNum.getText()));
+            try {
+                startServer(Integer.parseInt(portNum.getText()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
 
     }
 
     private void startServer(int portNumber) throws IOException {
-        try {
-            ServerSocket serverSocket = new ServerSocket(portNumber);
 
-            while (true) {
-                Socket agentSocket = serverSocket.accept();
-                Bank bank = new Bank(agentSocket);
-                Thread t = new Thread(bank);
-                t.start();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        ServerSocket serverSocket = new ServerSocket(portNumber);
+
+        while (true) {
+            Socket agentSocket = serverSocket.accept();
+            Bank bank = new Bank(agentSocket);
+            Thread t = new Thread(bank);
+            t.start();
         }
+
     }
 }

@@ -9,19 +9,24 @@ import java.net.Socket;
 
 public class Bank implements Runnable {
 
-    private final Socket agentSocket;
+    private Socket agentSocket;
     private PrintWriter out;
     private BufferedReader in;
 
     public Bank(Socket agentSocket) throws IOException {
-        this.agentSocket = agentSocket;
-        out = new PrintWriter(agentSocket.getOutputStream(), true);
-        in = new BufferedReader(new InputStreamReader(agentSocket.getInputStream()));
+        try {
+            this.agentSocket = agentSocket;
+            out = new PrintWriter(agentSocket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(agentSocket.getInputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void run() {
-
+        String inputLine = null;
+        String outputLine;
     }
 
 }

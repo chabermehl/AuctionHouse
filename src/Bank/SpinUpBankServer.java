@@ -18,6 +18,10 @@ public class SpinUpBankServer extends Application {
 
     }
 
+    private void startScene() {
+
+    }
+
     private void startServer(int portNumber) throws IOException {
         try {
             ServerSocket serverSocket = new ServerSocket(portNumber);

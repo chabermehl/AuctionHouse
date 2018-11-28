@@ -32,6 +32,11 @@ public class SpinUpBankServer extends Application {
         grid.setVgap(5);
         grid.setHgap(5);
         TextField portNum = new TextField();
+        portNum.setPromptText("What is the port number?");
+        portNum.setPrefColumnCount(10);
+        portNum.getText();
+        GridPane.setConstraints(portNum, 0, 0);
+        grid.getChildren().add(portNum);
 
     }
 

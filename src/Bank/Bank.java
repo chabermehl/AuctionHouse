@@ -14,13 +14,9 @@ public class Bank implements Runnable {
     private BufferedReader in;
 
     public Bank(Socket agentSocket) throws IOException {
-        try {
             this.agentSocket = agentSocket;
             out = new PrintWriter(agentSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(agentSocket.getInputStream()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

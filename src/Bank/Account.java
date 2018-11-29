@@ -20,6 +20,20 @@ public class Account implements Serializable {
         balance += amount;
     }
 
+    public synchronized void withdraw(double amount) {
+        if(balance >= amount) {
+            System.out.println(Thread.currentThread().getName() + " will withdraw " + amount + " from " + accountNum);
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            balance -= amount;
+        } else {
+            log("Cannot withdraw " + amount + " from " + balance);
+        }
+    }
+
     public void log(String msg) {
         System.out.println(msg);
     }

@@ -15,6 +15,11 @@ public class Account implements Serializable {
         this.bankKey = hashCode();
     }
 
+    public synchronized void deposit(double amount) {
+        log("Depositing $" + amount + "into " + accountNum);
+        balance += amount;
+    }
+
     public void log(String msg) {
         System.out.println(msg);
     }

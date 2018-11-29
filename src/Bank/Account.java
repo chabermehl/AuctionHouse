@@ -75,6 +75,12 @@ public class Account implements Serializable {
         locked = false;
     }
 
+    public double getBalance() {return this.balance;}
+    public void setbalance(double newBalance) {this.balance = newBalance;}
+    public int getAccountNum() {return this.accountNum;}
+    public String getName() {return this.name;}
+    public int getBankKey() {return this.bankKey;}
+
     /**
      * method for easy printing
      * @param msg message to be printed

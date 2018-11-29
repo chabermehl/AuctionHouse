@@ -75,6 +75,17 @@ public class Account implements Serializable {
         locked = false;
     }
 
+    /**
+     * used to print out the account details
+     */
+    public void printAccount() {
+        log("----------------------------------");
+        log("Account Name: " + this.name);
+        log("Account Number: " + this.accountNum);
+        log("Balance: " + this.balance);
+        log("Bank Key: " + this.bankKey);
+    }
+
     /*getters and setters*/
     public double getBalance() {return this.balance;}
     public void setbalance(double newBalance) {this.balance = newBalance;}

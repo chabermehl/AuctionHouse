@@ -18,21 +18,21 @@ public class Account implements Serializable {
     }
 
     public synchronized void deposit(double amount) {
-        log("Depositing $" + amount + "into " + accountNum);
-        balance += amount;
+        log("Depositing $" + amount + "into " + this.accountNum);
+        this.balance += amount;
     }
 
     public synchronized void withdraw(double amount) {
-        if(balance >= amount) {
-            System.out.println(Thread.currentThread().getName() + " will withdraw " + amount + " from " + accountNum);
+        if(this.balance >= amount) {
+            System.out.println(Thread.currentThread().getName() + " will withdraw " + amount + " from " + this.accountNum);
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            balance -= amount;
+            this.balance -= amount;
         } else {
-            log("Cannot withdraw " + amount + " from " + balance);
+            log("Cannot withdraw " + amount + " from " + this.balance);
         }
     }
 
@@ -42,7 +42,7 @@ public class Account implements Serializable {
     }
 
     public boolean hasFunds(double amount) {
-        double available =  balance-moneyHeld;
+        double available =  this.balance-moneyHeld;
         if(available == amount || available > amount) {
             return true;
         } else {

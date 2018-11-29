@@ -10,7 +10,7 @@ public class Account implements Serializable {
     private double moneyHeld = 0;
     private boolean locked = false;
 
-    StringBuilder stringBuilder = new StringBuilder();
+    private StringBuilder stringBuilder = new StringBuilder();
 
     public Account(String name, int accountNum, double balance) {
         this.name = name;

@@ -17,11 +17,19 @@ public class Account implements Serializable {
         this.bankKey = hashCode();
     }
 
+    /**
+     * deposits money into the account
+     * @param amount the amount being deposited
+     */
     public synchronized void deposit(double amount) {
         log("Depositing $" + amount + "into " + this.accountNum);
         this.balance += amount;
     }
 
+    /**
+     * withdraws money from the account
+     * @param amount the amount being withdrawn
+     */
     public synchronized void withdraw(double amount) {
         if(this.balance >= amount) {
             System.out.println(Thread.currentThread().getName() + " will withdraw " + amount + " from " + this.accountNum);
@@ -36,11 +44,20 @@ public class Account implements Serializable {
         }
     }
 
+    /**
+     * locks the amount of money used after a bid
+     * @param amount amount to be locked after a bid
+     */
     public void setAmountLocked(double amount) {
         moneyHeld += amount;
         locked = true;
     }
 
+    /**
+     * checks if the account has enough funds for the bid
+     * @param amount amount being checked for possible bid
+     * @return boolean based on available funds
+     */
     public boolean hasFunds(double amount) {
         double available =  this.balance-moneyHeld;
         if(available == amount || available > amount) {
@@ -50,15 +67,26 @@ public class Account implements Serializable {
         }
     }
 
+    /**
+     * if a bid is lost the funds must be unlocked
+     */
     public void resetAccountHolds() {
         moneyHeld = 0;
         locked = false;
     }
 
+    /**
+     * method for easy printing
+     * @param msg message to be printed
+     */
     private void log(String msg) {
         System.out.println(msg);
     }
 
+    /**
+     * overriding hashcode
+     * @return hash value for the bankKey
+     */
     @Override
     public int hashCode() {
         final int prime = 17;

@@ -8,7 +8,6 @@ public class Account implements Serializable {
     private double balance;
     private int bankKey;
     private double moneyHeld = 0;
-    private boolean locked = false;
 
     private StringBuilder stringBuilder = new StringBuilder();
 
@@ -52,7 +51,6 @@ public class Account implements Serializable {
      */
     public void setAmountLocked(double amount) {
         moneyHeld += amount;
-        locked = true;
     }
 
     /**
@@ -74,7 +72,6 @@ public class Account implements Serializable {
      */
     public void resetAccountHolds() {
         moneyHeld = 0;
-        locked = false;
     }
 
     /**

@@ -10,6 +10,8 @@ public class Account implements Serializable {
     private double moneyHeld = 0;
     private boolean locked = false;
 
+    StringBuilder stringBuilder = new StringBuilder();
+
     public Account(String name, int accountNum, double balance) {
         this.name = name;
         this.accountNum = accountNum;
@@ -84,6 +86,16 @@ public class Account implements Serializable {
         log("Account Number: " + this.accountNum);
         log("Balance: " + this.balance);
         log("Bank Key: " + this.bankKey);
+    }
+
+    public String getAccount() {
+        stringBuilder.append("----------------------------------" + "\n");
+        stringBuilder.append("Account Name: " + this.name + "\n");
+        stringBuilder.append("Account Number: " + this.accountNum + "\n");
+        stringBuilder.append("Balance: " + this.balance + "\n");
+        stringBuilder.append("Bank Key: " + this.bankKey + "\n");
+        return stringBuilder.toString();
+
     }
 
     /*getters and setters*/

@@ -88,6 +88,10 @@ public class Account implements Serializable {
         log("Bank Key: " + this.bankKey);
     }
 
+    /**
+     * gets the string representation of the account
+     * @return string representation of the account
+     */
     public String getAccount() {
         stringBuilder.append("----------------------------------" + "\n");
         stringBuilder.append("Account Name: " + this.name + "\n");

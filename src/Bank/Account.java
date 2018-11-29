@@ -34,7 +34,7 @@ public class Account implements Serializable {
         }
     }
 
-    public void log(String msg) {
+    private void log(String msg) {
         System.out.println(msg);
     }
 }

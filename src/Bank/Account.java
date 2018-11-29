@@ -50,6 +50,11 @@ public class Account implements Serializable {
         }
     }
 
+    public void resetAccountHolds() {
+        moneyHeld = 0;
+        locked = false;
+    }
+
     private void log(String msg) {
         System.out.println(msg);
     }

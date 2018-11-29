@@ -41,6 +41,15 @@ public class Account implements Serializable {
         locked = true;
     }
 
+    public boolean hasFunds(double amount) {
+        double available =  balance-moneyHeld;
+        if(available == amount || available > amount) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private void log(String msg) {
         System.out.println(msg);
     }

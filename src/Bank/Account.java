@@ -7,6 +7,8 @@ public class Account implements Serializable {
     private int accountNum;
     private double balance;
     private int bankKey;
+    private double moneyHeld = 0;
+    private boolean locked = false;
 
     public Account(String name, int accountNum, double balance) {
         this.name = name;
@@ -32,6 +34,11 @@ public class Account implements Serializable {
         } else {
             log("Cannot withdraw " + amount + " from " + balance);
         }
+    }
+
+    public void setAmountLocked(double amount) {
+        moneyHeld += amount;
+        locked = true;
     }
 
     private void log(String msg) {

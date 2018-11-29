@@ -2,11 +2,28 @@ package Agent;
 
 import AuctionHouse.AuctionHouse;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Scanner;
 
 public class Agent{
+    private static Map<String,NotificationListener> notificationListenerMap = new HashMap<>();
+    private static Map<String,AuctionHouseProxy> auctionHouseProxyMap = new HashMap<>();
+    private static class NotificationListener extends Thread{
+        AuctionHouseProxy auctionHouseProxy;
+        public NotificationListener(AuctionHouseProxy auctionHouseProxy){
+            this.auctionHouseProxy = auctionHouseProxy;
+            start();
+        }
+        @Override
+        public void run(){
+            String notification = "";
+            while(!notification.equals("terminate")) {
+                notification = auctionHouseProxy.takeNotification();
+            }
+        }
+    }
     /**
      *
      * @param args name amount BankIp BankPort
@@ -43,8 +60,10 @@ public class Agent{
                     input=sc.nextLine();
                     continue;
                 }
-                AuctionHouseProxy auctionHouseProxy = new AuctionHouseProxy(ip,port);
-                LinkedList<LinkedList<String>> items =  auctionHouseProxy.getItems();
+                if(!auctionHouseProxyMap.keySet().contains(ip)) {
+                    auctionHouseProxyMap.put(ip,new AuctionHouseProxy(ip, port));
+                }
+                LinkedList<LinkedList<String>> items =  auctionHouseProxyMap.get(ip).getItems();
                 int num = 1;
                 for (LinkedList<String> list: items){
                     System.out.println("num. houseId, itemId, description, minimumBid, currentBid");
@@ -55,8 +74,11 @@ public class Agent{
                     System.out.println();
                     num++;
                 }
+                auctionHouseProxyMap.remove(ip).terminate();
             }
-            else if(input.equals(""))
+            else if(input.contains("bid on")){
+
+            }
             input=sc.nextLine();
         }
         bankProxy.closeAcount(acountnum);

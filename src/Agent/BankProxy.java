@@ -36,7 +36,7 @@ public class BankProxy {
         return Integer.parseInt(returnVal);
     }
     public int getKey(int acountNum){
-        String message = "getKey;"+Integer.toString(acountNum);
+        String message = "getKey;"+acountNum;
         String returnVal = communicate(message);
         return Integer.parseInt(returnVal);
     }
@@ -52,25 +52,25 @@ public class BankProxy {
         return returnedVal;
     }
     public boolean withdraw(int amount){
-        String message = "withdraw;"+Integer.toString(amount);
+        String message = "withdraw;"+amount;
         String returnVal = communicate(message);
         return Boolean.getBoolean(returnVal);
     }
     public void deposit(int amount){
-        String message = "deposit;"+Integer.toString(amount);
+        String message = "deposit;"+amount;
         String returnVal = communicate(message);
     }
     public boolean lockBalance(int key,int amount){
-        String message = "lockBalance;"+Integer.toString(amount);
+        String message = "lockBalance;"+amount;
         String returnVal = communicate(message);
         return Boolean.getBoolean(returnVal);
     }
     public void releaseLock(int amount){
-        String message = "releaseLock;"+Integer.toString(amount);
+        String message = "releaseLock;"+amount;
         String returnVal = communicate(message);
     }
     public void closeAcount(int acountNum){
-        String message = "releaseLock;"+Integer.toString(acountNum);
+        String message = "releaseLock;"+acountNum;
         String returnVal = communicate(message);
     }
     // format: name,ip,port;...
@@ -87,7 +87,7 @@ public class BankProxy {
         return list;
     }
     public String getAuctionHouseIp(int id){
-        String message = "lockBalance;"+Integer.toString(id);
+        String message = "lockBalance;"+id;
         return communicate(message);
     }
 }

@@ -11,7 +11,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-
+/**
+ * Outward facing bank class that is interacted with
+ * Created in BankServer as a "proxy"
+ * Implements runnable as it has a socket connection
+ */
 public class Bank implements Runnable {
 
     private Socket agentSocket;

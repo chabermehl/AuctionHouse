@@ -18,6 +18,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * Acts as the backend of the bank
+ * Opens a gui that asks for a port number to run the server on
+ * Every time someone connects a new Bank thread is started in order to handle
+ * that user so they do not interfere with each other
+ */
 public class BankServer extends Application {
 
     private Stage window;

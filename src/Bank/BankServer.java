@@ -1,3 +1,8 @@
+/**
+ * Created by chabermehl
+ * 11/29/18
+ * CS 351
+ */
 package Bank;
 
 import javafx.application.Application;

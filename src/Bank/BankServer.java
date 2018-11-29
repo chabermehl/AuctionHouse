@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class SpinUpBankServer extends Application {
+public class BankServer extends Application {
 
     private Stage window;
 

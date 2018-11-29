@@ -58,4 +58,12 @@ public class Account implements Serializable {
     private void log(String msg) {
         System.out.println(msg);
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 17;
+        int result = 123456;
+        result = prime * result * this.accountNum;
+        return result;
+    }
 }

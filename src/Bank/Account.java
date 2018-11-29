@@ -75,6 +75,7 @@ public class Account implements Serializable {
         locked = false;
     }
 
+    /*getters and setters*/
     public double getBalance() {return this.balance;}
     public void setbalance(double newBalance) {this.balance = newBalance;}
     public int getAccountNum() {return this.accountNum;}

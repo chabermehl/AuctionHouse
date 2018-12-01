@@ -61,7 +61,11 @@ public class BankGUI extends Application {
 
     private void startServer(int portNumber) {
         BankServer bankServer = new BankServer(portNumber);
-        Thread t = new Thread(bankServer);
-        t.start();
+        try {
+            bankServer.startBankServer();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

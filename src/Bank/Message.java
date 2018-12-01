@@ -14,6 +14,7 @@ import java.io.Serializable;
  * Only message objects will be passed over the connection
  */
 public class Message implements Serializable {
+    public String dataInfo;
     public String data;
 
     /**
@@ -21,7 +22,8 @@ public class Message implements Serializable {
      * @param request action to be done be message receiver
      * @param data data used when message is received
      */
-    public Message(String data) {
+    public Message(String dataInfo, String data) {
+        this.dataInfo = dataInfo;
         this.data = data;
     }
 }

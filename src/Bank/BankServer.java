@@ -13,7 +13,6 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -68,8 +67,8 @@ public class BankServer extends Application {
 
         while (true) {
             Socket agentSocket = serverSocket.accept();
-            Bank bank = new Bank(agentSocket);
-            Thread t = new Thread(bank);
+            BankClient bankClient = new BankClient(agentSocket);
+            Thread t = new Thread(bankClient);
             t.start();
         }
 

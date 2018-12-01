@@ -27,7 +27,15 @@ public class BankClient implements Runnable {
 
     @Override
     public void run() {
-
+        try {
+            while(true) {
+                Message m = (Message) in.readObject();
+            }
+        } catch (IOException e) {
+            System.out.println(agentSocket.getRemoteSocketAddress()+" has disconnected");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public void sendMessage(Message message) throws IOException {

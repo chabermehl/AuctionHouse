@@ -16,20 +16,20 @@ import java.net.Socket;
 public class BankClient implements Runnable {
 
     private Socket agentSocket;
-    private ObjectOutputStream out;
-    private ObjectInputStream in;
+    private ObjectOutputStream oos;
+    private ObjectInputStream ois;
 
     public BankClient(Socket agentSocket) throws IOException {
             this.agentSocket = agentSocket;
-            out = new ObjectOutputStream(agentSocket.getOutputStream());
-            in = new ObjectInputStream(agentSocket.getInputStream());
+            this.oos = new ObjectOutputStream(agentSocket.getOutputStream());
+            this.ois = new ObjectInputStream(agentSocket.getInputStream());
     }
 
     @Override
     public void run() {
         try {
             while(true) {
-                Message m = (Message) in.readObject();
+                Message m = (Message) ois.readObject();
             }
         } catch (IOException e) {
             System.out.println(agentSocket.getRemoteSocketAddress()+" has disconnected");
@@ -39,7 +39,7 @@ public class BankClient implements Runnable {
     }
 
     public void sendMessage(Message message) throws IOException {
-        out.writeObject(message);
+        oos.writeObject(message);
     }
 
 

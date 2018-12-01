@@ -14,8 +14,8 @@ import java.io.Serializable;
  * Only message objects will be passed over the connection
  */
 public class Message implements Serializable {
-    private String request;
-    private String data;
+    public String request;
+    public String data;
 
     /**
      * holds data to send a message object between classes

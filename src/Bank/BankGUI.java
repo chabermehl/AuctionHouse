@@ -54,25 +54,14 @@ public class BankGUI extends Application {
 
         Button startServerButton = new Button("Start Server");
         startServerButton.setOnAction(event -> {
-            try {
-                startServer(Integer.parseInt(portNum.getText()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            startServer(Integer.parseInt(portNum.getText()));
         });
 
     }
 
-    private void startServer(int portNumber) throws IOException {
-
-        ServerSocket serverSocket = new ServerSocket(portNumber);
-
-        while (true) {
-            Socket agentSocket = serverSocket.accept();
-            BankClient bankClient = new BankClient(agentSocket);
-            Thread t = new Thread(bankClient);
-            t.start();
-        }
-
+    private void startServer(int portNumber) {
+        BankServer bankServer = new BankServer(portNumber);
+        Thread t = new Thread(bankServer);
+        t.start();
     }
 }

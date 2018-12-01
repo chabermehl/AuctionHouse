@@ -10,14 +10,14 @@ import java.net.Socket;
 
 /**
  * Outward facing bank class that is interacted with
- * Created in BankServer as a "proxy"
+ * Created in BankGUI as a "proxy"
  * Implements runnable as it has a socket connection
  */
 public class BankClient implements Runnable {
 
-    private Socket agentSocket;
-    private ObjectOutputStream oos;
-    private ObjectInputStream ois;
+    public Socket agentSocket;
+    public ObjectOutputStream oos;
+    public ObjectInputStream ois;
 
     public BankClient(Socket agentSocket) throws IOException {
             this.agentSocket = agentSocket;
@@ -29,7 +29,20 @@ public class BankClient implements Runnable {
     public void run() {
         try {
             while(true) {
-                Message m = (Message) ois.readObject();
+                Message message = (Message) ois.readObject();
+                if(message.data != null && !message.data.isEmpty()) {
+                    String inMessage = message.data;
+                    String[] strings = inMessage.split(",");
+                    if(message.data.contains("Initialize Account")) {
+                        if(strings.length != 3 ) {
+                            message = new Message("Incorrect Input", "Incorrect Input");
+                        } else {
+                            Bank bank = new Bank();
+                            bank.openNewAccount(strings[1], Double.parseDouble(strings[2]));
+                        }
+                    }
+                }
+            this.sendMessage(message);
             }
         } catch (IOException e) {
             System.out.println(agentSocket.getRemoteSocketAddress()+" has disconnected");

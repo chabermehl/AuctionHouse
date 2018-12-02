@@ -138,6 +138,16 @@ public class AuctionHouse {
         }
     }
 
+    private Auction getAuctionByName(String name)
+    {
+        for(Auction auction : currentAuctions) {
+            if(auction.getItemName().equals(name)) {
+                return auction;
+            }
+        }
+        return null;
+    }
+
     // item format is: (house id, item id, description, minimum bid, current bid)
     public LinkedList<LinkedList<String>> getItems() {
         return null;

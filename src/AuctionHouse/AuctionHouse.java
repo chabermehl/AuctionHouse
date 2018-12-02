@@ -1,17 +1,12 @@
 package AuctionHouse;
 
-import Agent.BankProxy;
 import Bank.Message;
-
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
-import static java.lang.Thread.sleep;
 
 /**
  * The auction house has
@@ -20,9 +15,6 @@ public class AuctionHouse {
 
     // All of the active auctions in this house.
     private LinkedList<Auction> currentAuctions = new LinkedList<>();
-
-    // Bank proxy to open/close account
-    private BankProxy bankProxy;
 
     // Info for connecting to bank
     private String bankIP;
@@ -36,17 +28,29 @@ public class AuctionHouse {
     private Socket bankSocket;
     private AuctionHouseServer ahServer;
 
+    /**
+     * Auction House server class used as a sort of proxy, I guess.
+     * Forwards messages to the actual auction house
+     */
     private class AuctionHouseServer extends Thread {
 
-        public int port;
+        private int port;
+        private AuctionHouse auctionHouse;
         private ServerSocket serverSocket;
-        public AuctionHouseServer(int port) {this.port = port;}
+
+        public AuctionHouseServer(int port, AuctionHouse ahouse) {
+            this.port = port; this.auctionHouse = ahouse;
+        }
         public void shutdown() {
             try {
                 serverSocket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+        // Forward message to auction house when we get a message
+        private void forwardMessageToAuctionHouse(Message message) {
+
         }
         public void run() {
             try {
@@ -83,8 +87,8 @@ public class AuctionHouse {
         // Connect to proxy and make an account
         //connectToBank();
         // set up server
-        ahServer = new AuctionHouseServer(2222);
-        ahServer.run();
+        ahServer = new AuctionHouseServer(2222, this);
+        ahServer.start();
 
         // Make a list of auctioned items for testing
         // t1 = record the time

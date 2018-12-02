@@ -1,9 +1,16 @@
 package AuctionHouse;
 
 import Agent.BankProxy;
-import java.util.LinkedList;
-import java.util.Map;
+import Bank.Message;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.LinkedList;
 import static java.lang.Thread.sleep;
 
 /**
@@ -20,58 +27,127 @@ public class AuctionHouse {
     // Info for connecting to bank
     private String bankIP;
     private int bankPort;
-
+    private ObjectOutputStream oos;
+    private ObjectInputStream ois;
     // Use this for creating unique house ids
     private int houseID;
 
-    public static void main(String[] args)
-    {
-        AuctionHouse auctionHouse = new AuctionHouse(0,"Insert bank ip here", 2224);
+    // Socket used for talking with the bank
+    private Socket bankSocket;
+    private AuctionHouseServer ahServer;
+
+    private class AuctionHouseServer extends Thread {
+
+        public int port;
+        private ServerSocket serverSocket;
+        public AuctionHouseServer(int port) {this.port = port;}
+        public void shutdown() {
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void run() {
+            try {
+                serverSocket = new ServerSocket(port);
+            } catch (IOException e) {
+                System.out.println("Problem creating auction house server on port " + port);
+                e.printStackTrace();
+            }
+
+            while (!serverSocket.isClosed()) {
+                // Try and accept new client connections
+                try {
+                    serverSocket.accept();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            System.out.println("Server done running");
+        }
+    }
+
+    public static void main(String[] args) {
+        AuctionHouse auctionHouse = new AuctionHouse(0, "bankIP", 2222);
         auctionHouse.run();
     }
 
-    public AuctionHouse(int houseID, String bankIP, int bankPort)
-    {
+    public AuctionHouse(int houseID, String bankIP, int bankPort) {
         this.bankIP = bankIP;
         this.bankPort = bankPort;
         this.houseID = houseID;
     }
 
-    public void run()
-    {
+    public void run() {
         // Connect to proxy and make an account
-        // connectToBank();
-        // createBankAccount()
+        //connectToBank();
+        // set up server
+        ahServer = new AuctionHouseServer(2222);
+        ahServer.run();
 
         // Make a list of auctioned items for testing
         // t1 = record the time
-        // make a private class that has a thread which loop via a constant time and auction a new thing and check for the time
-        // loop does things
+        while(true) {
 
+        }
 
         // wait for a command to terminate
-        closeBankAccount();
+        // closeBankAccount();
     }
 
-    private void addAuction(Auction auction)
-    {
+    private void connectToBank() {
+        // Try to connect to the bank
+        try {
+            // Try to connect to bank
+            bankSocket = new Socket(bankIP, bankPort);
+            oos = new ObjectOutputStream(bankSocket.getOutputStream());
+            ois = new ObjectInputStream(bankSocket.getInputStream());
+
+            // Create an account with zero balance
+            oos.writeObject(new Message("Create Account", "0,true"));
+        } catch (IOException e) {
+            System.out.println("Error: Could not connect to bank");
+            e.printStackTrace();
+        }
+    }
+
+    private void sendAuctionsToBank() {
+        try {
+            oos.writeObject(new Message("Auctions", ""));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private synchronized void addAuction(Auction auction) {
         currentAuctions.add(auction);
         auction.start();
     }
 
     public synchronized void bid(int key,String name,double amount) { }
 
-    public void closeBankAccount() {}
+    public void closeBankAccount() {
+        try {
+            oos.writeObject(new Message("Close Account", ""));
+        } catch (IOException e) {
+            System.out.println("Problem closing bank account");
+            e.printStackTrace();
+        }
+    }
+
     // item format is: (house id, item id, description, minimum bid, current bid)
-    public LinkedList<LinkedList<String>> getItems(){
+    public LinkedList<LinkedList<String>> getItems() {
         return null;
     }
 
-    public boolean freezeAmount(int key,double amount){
+    public boolean freezeAmount(int key,double amount) {
         return false;
     }
 
-    public void acceptBid(int key,String item){
+    public void acceptBid(int key,String item) {
         // accept the bid from agent proxy
         // remove funds from acount
     }

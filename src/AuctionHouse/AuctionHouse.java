@@ -161,6 +161,9 @@ public class AuctionHouse {
                 sendMessageToBank(new Message("Freeze Funds", Integer.toString(key) + "," + Double.toString(amount)));
                 // if that worked, unfreeze the funds of the bidder that got passed and notify them
                 sendMessageToBank(new Message("Unfreeze Funds", Integer.toString(key) + Double.toString(auction.getCurrentBid())));
+
+                // Update that auction to reset it's timer
+                auction.setBid(key, amount);
             }
         }
     }

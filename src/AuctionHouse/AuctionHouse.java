@@ -48,7 +48,6 @@ public class AuctionHouse {
                 e.printStackTrace();
             }
         }
-
         public void run() {
             try {
                 serverSocket = new ServerSocket(port);
@@ -65,7 +64,6 @@ public class AuctionHouse {
                     e.printStackTrace();
                 }
             }
-
             System.out.println("Server done running");
         }
     }
@@ -93,7 +91,6 @@ public class AuctionHouse {
         while(true) {
 
         }
-
         // wait for a command to terminate
         // closeBankAccount();
     }
@@ -107,9 +104,19 @@ public class AuctionHouse {
             ois = new ObjectInputStream(bankSocket.getInputStream());
 
             // Create an account with zero balance
-            oos.writeObject(new Message("Create Account", "0,true"));
+            sendMessageToBank(new Message("Create Account", "0,true"));
         } catch (IOException e) {
             System.out.println("Error: Could not connect to bank");
+            e.printStackTrace();
+        }
+    }
+
+    private void sendMessageToBank(Message message)
+    {
+        try {
+            oos.writeObject(message);
+        } catch (IOException e) {
+            System.out.println("Failed to send message to bank");
             e.printStackTrace();
         }
     }
@@ -130,12 +137,7 @@ public class AuctionHouse {
     public synchronized void bid(int key,String name,double amount) { }
 
     public void closeBankAccount() {
-        try {
-            oos.writeObject(new Message("Close Account", ""));
-        } catch (IOException e) {
-            System.out.println("Problem closing bank account");
-            e.printStackTrace();
-        }
+        sendMessageToBank(new Message("Close Account", ""));
     }
 
     private Auction getAuctionByName(String name)
@@ -153,7 +155,9 @@ public class AuctionHouse {
         return null;
     }
 
-    public boolean freezeAmount(int key,double amount) {
+    public boolean freezeFunds(int key,double amount) {
+        sendMessageToBank(new Message("Unfreeze Funds", Integer.toString(key)));
+        sendMessageToBank(new Message("Freeze Funds", Integer.toString(key)));
         return false;
     }
 

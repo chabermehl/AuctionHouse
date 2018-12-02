@@ -134,8 +134,6 @@ public class AuctionHouse {
         auction.start();
     }
 
-    public synchronized void bid(int key,String name,double amount) { }
-
     public void closeBankAccount() {
         sendMessageToBank(new Message("Close Account", ""));
     }
@@ -150,15 +148,17 @@ public class AuctionHouse {
         return null;
     }
 
-    // item format is: (house id, item id, description, minimum bid, current bid)
-    public LinkedList<LinkedList<String>> getItems() {
-        return null;
-    }
-
-    public boolean freezeFunds(int key,double amount) {
-        sendMessageToBank(new Message("Unfreeze Funds", Integer.toString(key)));
-        sendMessageToBank(new Message("Freeze Funds", Integer.toString(key)));
-        return false;
+    public synchronized void bid(int key, String name, double amount) {
+        Auction auction = getAuctionByName(name);
+        if(auction != null) {
+            if(amount >= auction.getCurrentBid() + auction.getMinimumBid())
+            {
+                // Try to freeze funds
+                sendMessageToBank(new Message("Freeze Funds", Integer.toString(key) + "," + Double.toString(amount)));
+                // if that worked, unfreeze the funds of the bidder that got passed and notify them
+                sendMessageToBank(new Message("Unfreeze Funds", Integer.toString(key) + Double.toString(auction.getCurrentBid())));
+            }
+        }
     }
 
     public void acceptBid(int key,String item) {
@@ -171,5 +171,11 @@ public class AuctionHouse {
     public void rejectBid(int key,String item){
         // reject the bid from agent proxy
         // unblock the money from bank proxy
+    }
+
+
+    // item format is: (house id, item id, description, minimum bid, current bid)
+    public LinkedList<LinkedList<String>> getItems() {
+        return null;
     }
 }

@@ -43,8 +43,8 @@ public class BankServer extends Thread {
                 Socket clientSocket = serverSocket.accept();
                 BankClient bankClient = new BankClient(clientSocket);
                 bankClient.sendMessage(new Message("BANK SERVER", "Welcome!\n" +
-                        "To create an account, use the command: Initialize Account,<name>,<Initial Deposit>\n" +
-                        "For example: Initialize Account,Steve,400\n" +
+                        "To create an account, use the command: InitializeAccount <name> <Initial Deposit>\n" +
+                        "For example: InitializeAccount Steve 400\n" +
                         "---------------------------------------------\n" +
                         "To check your balance, use the command: balance,<bankKey>\n" +
                         "---------------------------------------------\n" +

@@ -37,4 +37,9 @@ public class Bank {
     public synchronized void unlockAccount(int bankKey) {
         accountList.get(bankKey).resetAccountHolds();
     }
+
+    public double getBalance(int bankKey) {
+        Account tempAccount = getAccount(bankKey);
+        return tempAccount.getBalance();
+    }
 }

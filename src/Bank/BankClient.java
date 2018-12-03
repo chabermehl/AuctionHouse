@@ -33,14 +33,24 @@ public class BankClient implements Runnable {
             while (true) {
                 Message message = (Message) ois.readObject();
                 if (message.data != null && !message.data.isEmpty()) {
-                    String inMessage = message.data;
-                    String[] strings = inMessage.split(",");
+                    String[] inMessage = message.data.split(",");
                     if (message.data.contains("Initialize Account")) {
-                        if (strings.length != 3) {
+                        if (inMessage.length != 3) {
                             message = new Message("Incorrect Input", "Incorrect Input");
                         } else {
-                            Bank bank = new Bank();
-                            bank.openNewAccount(strings[1], Double.parseDouble(strings[2]));
+
+                            Bank.openNewAccount(inMessage[1], Double.parseDouble(inMessage[2]));
+                            String bankKey = Integer.toString(Bank.getBankKey());
+                            message = new Message("Bank Key: ", bankKey);
+                        }
+                    }
+                    if(message.data.contains("Balance")) {
+                        int bankKey = Integer.parseInt(inMessage[1]);
+                        log("" + bankKey);
+                        if(Bank.isValidKey(bankKey)) {
+                            message = new Message("Info", Bank.getAccountDetails(bankKey));
+                        } else {
+                            message = new Message("Error", "Invalid Bank Key");
                         }
                     }
                 }
@@ -57,5 +67,7 @@ public class BankClient implements Runnable {
         oos.writeObject(message);
     }
 
-
+    private void log(String msg) {
+        System.out.println(msg);
+    }
 }

@@ -42,4 +42,8 @@ public class Bank {
         Account tempAccount = getAccount(bankKey);
         return tempAccount.getBalance();
     }
+
+    public boolean hasEnoughFunds(int bankKey, double bid) {
+        return getAccount(bankKey).hasFunds(bid);
+    }
 }

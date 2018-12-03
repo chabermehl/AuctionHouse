@@ -38,8 +38,7 @@ public class BankClient implements Runnable {
                         if (inMessage.length != 3) {
                             message = new Message("Incorrect Input", "Incorrect Input");
                         } else {
-
-                            Bank.openNewAccount(inMessage[1], Double.parseDouble(inMessage[2]));
+                            Bank.openNewAccount(inMessage[1], Double.parseDouble(inMessage[2]), inMessage[3]);
                             String bankKey = Integer.toString(Bank.getBankKey());
                             message = new Message("Bank Key: ", bankKey);
                         }

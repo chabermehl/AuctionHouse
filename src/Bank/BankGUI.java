@@ -7,6 +7,7 @@ package Bank;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -16,6 +17,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+
 
 
 /**
@@ -50,22 +52,24 @@ public class BankGUI extends Application {
         portNum.setPrefColumnCount(10);
         portNum.getText();
         GridPane.setConstraints(portNum, 0, 0);
-        grid.getChildren().add(portNum);
 
         Button startServerButton = new Button("Start Server");
         startServerButton.setOnAction(event -> {
             startServer(Integer.parseInt(portNum.getText()));
         });
+        GridPane.setConstraints(startServerButton, 0,1);
+
+        grid.getChildren().addAll(portNum, startServerButton);
+        Scene scene = new Scene(grid, 500,500);
+        window.setScene(scene);
+        window.show();
 
     }
 
     private void startServer(int portNumber) {
         BankServer bankServer = new BankServer(portNumber);
-        try {
             bankServer.startBankServer();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
     }
 }

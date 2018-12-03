@@ -22,6 +22,13 @@ public class BankServer {
         while(true) {
             Socket clientSocket = serverSocket.accept();
             BankClient bankClient = new BankClient(clientSocket);
+            bankClient.sendMessage(new Message("BANK SERVER", "Welcome!\n" +
+                    "To create an account, use the command: Initialize Account,<name>,<Initial Deposit>" +
+                    "For example: Initialize Account,Steve,400" +
+                    "---------------------------------------------" +
+                    "To check your balance, use the command: balance,<bankKey>" +
+                    "---------------------------------------------" +
+                    "Add something about auctions houses you can choose here."));
             Thread t = new Thread(bankClient);
             t.start();
         }

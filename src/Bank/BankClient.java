@@ -62,6 +62,11 @@ public class BankClient implements Runnable {
                             checkFlag = " does not have ";
                         }
                         message = new Message("Bank", bankKey + checkFlag + "enough funds.");
+                    } else if(message.data.contains("Transfer")) {
+                        int bankKeyA = Integer.parseInt(inMessage[1]);
+                        int bankKeyB = Integer.parseInt(inMessage[2]);
+                        double amount = Double.parseDouble(inMessage[3]);
+                        Bank.moveMoney(bankKeyA, bankKeyB, amount);
                     }
                 }
                 this.sendMessage(message);

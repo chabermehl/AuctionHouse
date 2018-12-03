@@ -29,4 +29,8 @@ public class Bank {
     public Account getAccount(int bankKey) {
         return accountList.get(bankKey);
     }
+
+    public synchronized void setAccountHold(int bankKey, double bid) {
+        accountList.get(bankKey).setAmountLocked(bid);
+    }
 }

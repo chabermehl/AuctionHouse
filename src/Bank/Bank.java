@@ -21,4 +21,8 @@ public class Bank {
         bankKey = newAccount.getBankKey();
         accountList.put(bankKey, newAccount);
     }
+
+    public int getBankKey() {
+        return this.bankKey;
+    }
 }

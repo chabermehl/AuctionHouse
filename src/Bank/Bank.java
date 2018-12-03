@@ -46,4 +46,12 @@ public class Bank {
     public boolean hasEnoughFunds(int bankKey, double bid) {
         return getAccount(bankKey).hasFunds(bid);
     }
+
+    public boolean isValidKey(int bankKey) {
+        if(accountList.containsKey(bankKey)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

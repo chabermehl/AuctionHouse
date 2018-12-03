@@ -33,8 +33,8 @@ public class BankClient implements Runnable {
             while (true) {
                 Message message = (Message) ois.readObject();
                 if (message.data != null && !message.data.isEmpty()) {
-                    String[] inMessage = message.data.split(",");
-                    if (message.data.contains("Initialize Account")) {
+                    String[] inMessage = message.data.split(" ");
+                    if (message.data.contains("InitializeAccount")) {
                         if (inMessage.length != 3) {
                             message = new Message("Incorrect Input", "Incorrect Input");
                         } else {
@@ -43,8 +43,7 @@ public class BankClient implements Runnable {
                             String bankKey = Integer.toString(Bank.getBankKey());
                             message = new Message("Bank Key: ", bankKey);
                         }
-                    }
-                    if(message.data.contains("Balance")) {
+                    } else if(message.data.contains("Balance")) {
                         int bankKey = Integer.parseInt(inMessage[1]);
                         log("" + bankKey);
                         if(Bank.isValidKey(bankKey)) {
@@ -52,6 +51,17 @@ public class BankClient implements Runnable {
                         } else {
                             message = new Message("Error", "Invalid Bank Key");
                         }
+                    } else if(message.data.contains("Has Funds")) {
+                        int bankKey = Integer.parseInt(inMessage[1]);
+                        double amount = Double.parseDouble(inMessage[2]);
+                        String checkFlag;
+                        if(Bank.hasEnoughFunds(bankKey, amount)) {
+                            Bank.setAccountHold(bankKey, amount);
+                            checkFlag = " has ";
+                        } else {
+                            checkFlag = " does not have ";
+                        }
+                        message = new Message("Bank", bankKey + checkFlag + "enough funds.");
                     }
                 }
                 this.sendMessage(message);

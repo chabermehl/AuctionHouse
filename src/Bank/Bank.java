@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.Random;
 
 public class Bank {
-    public Map<Integer, Account> accountList = new HashMap<>();
+    public static Map<Integer, Account> accountList = new HashMap<>();
     public Random rand = new Random();
 
-    public int bankKey;
+    public static int bankKey;
 
     /**
      * opens a new account with the name and initial deposit
@@ -21,39 +21,39 @@ public class Bank {
      * @param accountName    name the account will have
      * @param initialDeposit the initial deposit to be placed in the account
      */
-    public void openNewAccount(String accountName, double initialDeposit) {
-        int accountNumber = 1234 + accountList.size() + 1;
+    public static void openNewAccount(String accountName, double initialDeposit) {
+        int accountNumber = 12348 + accountList.size() + 1;
         Account newAccount = new Account(accountName, accountNumber, initialDeposit);
         bankKey = newAccount.getBankKey();
         accountList.put(bankKey, newAccount);
     }
 
-    public int getBankKey() {
-        return this.bankKey;
+    public static int getBankKey() {
+        return bankKey;
     }
 
-    public Account getAccount(int bankKey) {
+    public static Account getAccount(int bankKey) {
         return accountList.get(bankKey);
     }
 
-    public synchronized void setAccountHold(int bankKey, double bid) {
+    public static synchronized void setAccountHold(int bankKey, double bid) {
         accountList.get(bankKey).setAmountLocked(bid);
     }
 
-    public synchronized void unlockAccount(int bankKey) {
+    public static synchronized void unlockAccount(int bankKey) {
         accountList.get(bankKey).resetAccountHolds();
     }
 
-    public double getBalance(int bankKey) {
+    public static double getBalance(int bankKey) {
         Account tempAccount = getAccount(bankKey);
         return tempAccount.getBalance();
     }
 
-    public boolean hasEnoughFunds(int bankKey, double bid) {
+    public static boolean hasEnoughFunds(int bankKey, double bid) {
         return getAccount(bankKey).hasFunds(bid);
     }
 
-    public boolean isValidKey(int bankKey) {
+    public static boolean isValidKey(int bankKey) {
         if (accountList.containsKey(bankKey)) {
             return true;
         } else {
@@ -61,12 +61,12 @@ public class Bank {
         }
     }
 
-    public String getAccountDetails(int bankKey) {
+    public static String getAccountDetails(int bankKey) {
         Account tempAccount = getAccount(bankKey);
         return tempAccount.getAccountDetails();
     }
 
-    public void moveMoney(int keyA, int keyB, double amount) {
+    public static void moveMoney(int keyA, int keyB, double amount) {
         Account A = accountList.get(keyA);
         Account B = accountList.get(keyB);
 
@@ -84,7 +84,7 @@ public class Bank {
         B.printAccount();
     }
 
-    private void log(String msg) {
+    private static void log(String msg) {
         System.out.println(msg);
     }
 }

@@ -42,26 +42,26 @@ public class BankClient implements Runnable {
                             String bankKey = Integer.toString(Bank.getBankKey());
                             message = new Message("Bank Key: ", bankKey);
                         }
-                    } else if(message.data.contains("Balance")) {
+                    } else if (message.data.contains("Balance")) {
                         int bankKey = Integer.parseInt(inMessage[1]);
                         log("" + bankKey);
-                        if(Bank.isValidKey(bankKey)) {
+                        if (Bank.isValidKey(bankKey)) {
                             message = new Message("Info", Bank.getAccountDetails(bankKey));
                         } else {
                             message = new Message("Error", "Invalid Bank Key");
                         }
-                    } else if(message.data.contains("Has Funds")) {
+                    } else if (message.data.contains("Has Funds")) {
                         int bankKey = Integer.parseInt(inMessage[1]);
                         double amount = Double.parseDouble(inMessage[2]);
                         String checkFlag;
-                        if(Bank.hasEnoughFunds(bankKey, amount)) {
+                        if (Bank.hasEnoughFunds(bankKey, amount)) {
                             Bank.setAccountHold(bankKey, amount);
                             checkFlag = " has ";
                         } else {
                             checkFlag = " does not have ";
                         }
                         message = new Message("Bank", bankKey + checkFlag + "enough funds.");
-                    } else if(message.data.contains("Transfer")) {
+                    } else if (message.data.contains("Transfer")) {
                         int bankKeyA = Integer.parseInt(inMessage[1]);
                         int bankKeyB = Integer.parseInt(inMessage[2]);
                         double amount = Double.parseDouble(inMessage[3]);

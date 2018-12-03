@@ -63,7 +63,7 @@ public class BankGUI extends Application {
     }
 
     private void startServer(int portNumber) {
-        try{
+        try {
             BankServer bankServer = new BankServer(portNumber);
             bankServer.startBankServer(bankServer);
         } catch (IOException e) {

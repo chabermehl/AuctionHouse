@@ -7,12 +7,10 @@ package Bank;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class Bank {
     public static Map<Integer, Account> accountList = new HashMap<>();
     public static Map<Integer, Account> auctionList = new HashMap<>();
-    public Random rand = new Random();
 
     public static int bankKey;
 
@@ -23,12 +21,12 @@ public class Bank {
      * @param initialDeposit the initial deposit to be placed in the account
      */
     public static void openNewAccount(String accountName, double initialDeposit, String accountType) {
-        if("Agent".equals(accountType)) {
+        if ("Agent".equals(accountType)) {
             int accountNumber = 12348 + accountList.size() + 1;
             Account newAccount = new Account(accountName, accountNumber, initialDeposit);
             bankKey = newAccount.getBankKey();
             accountList.put(bankKey, newAccount);
-        } else if("Auction".equals(accountType)) {
+        } else if ("Auction".equals(accountType)) {
             int accountNumber = 84321 + auctionList.size() + 1;
             Account newAccount = new Account(accountName, accountNumber, 0);
             bankKey = newAccount.getBankKey();

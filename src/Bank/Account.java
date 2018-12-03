@@ -96,7 +96,7 @@ public class Account {
      * gets the string representation of the account
      * @return string representation of the account
      */
-    public String getAccount() {
+    public String getAccountDetails() {
         stringBuilder.append("----------------------------------" + "\n");
         stringBuilder.append("Account Name: " + this.name + "\n");
         stringBuilder.append("Account Number: " + this.accountNum + "\n");

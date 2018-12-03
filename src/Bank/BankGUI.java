@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -43,19 +44,30 @@ public class BankGUI extends Application {
         grid.setPadding(new Insets(10, 10, 10, 10));
         grid.setVgap(5);
         grid.setHgap(5);
+
+        Label addAuctionLabel = new Label("Add an Auction House here.\n" +
+                "<Host Name> <Port Number>");
+        GridPane.setConstraints(addAuctionLabel,0,0);
+
+
+
+        //code for getting port number to start server
+        Label startServerLabel = new Label("Enter a Port Number for the Server To Run On");
+        GridPane.setConstraints(startServerLabel,0,7);
+
         TextField portNum = new TextField();
         portNum.setPromptText("What is the port number?");
         portNum.setPrefColumnCount(10);
         portNum.getText();
-        GridPane.setConstraints(portNum, 0, 0);
+        GridPane.setConstraints(portNum, 0, 8);
 
         Button startServerButton = new Button("Start Server");
         startServerButton.setOnAction(event -> {
             startServer(Integer.parseInt(portNum.getText()));
         });
-        GridPane.setConstraints(startServerButton, 0, 1);
+        GridPane.setConstraints(startServerButton, 0, 9);
 
-        grid.getChildren().addAll(portNum, startServerButton);
+        grid.getChildren().addAll(addAuctionLabel, startServerLabel, portNum, startServerButton);
         Scene scene = new Scene(grid, 500, 500);
         window.setScene(scene);
         window.show();

@@ -33,4 +33,8 @@ public class Bank {
     public synchronized void setAccountHold(int bankKey, double bid) {
         accountList.get(bankKey).setAmountLocked(bid);
     }
+
+    public synchronized void unlockAccount(int bankKey) {
+        accountList.get(bankKey).resetAccountHolds();
+    }
 }

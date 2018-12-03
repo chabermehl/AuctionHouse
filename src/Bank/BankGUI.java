@@ -13,11 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-
 
 
 /**
@@ -44,7 +40,7 @@ public class BankGUI extends Application {
 
     private void startScene() {
         GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10,10,10,10));
+        grid.setPadding(new Insets(10, 10, 10, 10));
         grid.setVgap(5);
         grid.setHgap(5);
         TextField portNum = new TextField();
@@ -57,19 +53,22 @@ public class BankGUI extends Application {
         startServerButton.setOnAction(event -> {
             startServer(Integer.parseInt(portNum.getText()));
         });
-        GridPane.setConstraints(startServerButton, 0,1);
+        GridPane.setConstraints(startServerButton, 0, 1);
 
         grid.getChildren().addAll(portNum, startServerButton);
-        Scene scene = new Scene(grid, 500,500);
+        Scene scene = new Scene(grid, 500, 500);
         window.setScene(scene);
         window.show();
 
     }
 
     private void startServer(int portNumber) {
-        BankServer bankServer = new BankServer(portNumber);
-            bankServer.startBankServer();
-
+        try{
+            BankServer bankServer = new BankServer(portNumber);
+            bankServer.startBankServer(bankServer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }

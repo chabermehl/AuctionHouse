@@ -25,4 +25,8 @@ public class Bank {
     public int getBankKey() {
         return this.bankKey;
     }
+
+    public Account getAccount(int bankKey) {
+        return accountList.get(bankKey);
+    }
 }

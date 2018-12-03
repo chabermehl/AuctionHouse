@@ -54,4 +54,9 @@ public class Bank {
             return false;
         }
     }
+
+    public String getAccountDetails(int bankKey) {
+        Account tempAccount = getAccount(bankKey);
+        return tempAccount.getAccountDetails();
+    }
 }

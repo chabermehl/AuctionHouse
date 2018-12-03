@@ -17,7 +17,8 @@ public class Bank {
 
     /**
      * opens a new account with the name and initial deposit
-     * @param accountName name the account will have
+     *
+     * @param accountName    name the account will have
      * @param initialDeposit the initial deposit to be placed in the account
      */
     public void openNewAccount(String accountName, double initialDeposit) {
@@ -53,7 +54,7 @@ public class Bank {
     }
 
     public boolean isValidKey(int bankKey) {
-        if(accountList.containsKey(bankKey)) {
+        if (accountList.containsKey(bankKey)) {
             return true;
         } else {
             return false;

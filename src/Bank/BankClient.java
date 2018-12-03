@@ -5,7 +5,9 @@
  */
 package Bank;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
@@ -20,21 +22,21 @@ public class BankClient implements Runnable {
     public ObjectInputStream ois;
 
     public BankClient(Socket agentSocket) throws IOException {
-            this.agentSocket = agentSocket;
-            this.oos = new ObjectOutputStream(agentSocket.getOutputStream());
-            this.ois = new ObjectInputStream(agentSocket.getInputStream());
+        this.agentSocket = agentSocket;
+        this.oos = new ObjectOutputStream(agentSocket.getOutputStream());
+        this.ois = new ObjectInputStream(agentSocket.getInputStream());
     }
 
     @Override
     public void run() {
         try {
-            while(true) {
+            while (true) {
                 Message message = (Message) ois.readObject();
-                if(message.data != null && !message.data.isEmpty()) {
+                if (message.data != null && !message.data.isEmpty()) {
                     String inMessage = message.data;
                     String[] strings = inMessage.split(",");
-                    if(message.data.contains("Initialize Account")) {
-                        if(strings.length != 3 ) {
+                    if (message.data.contains("Initialize Account")) {
+                        if (strings.length != 3) {
                             message = new Message("Incorrect Input", "Incorrect Input");
                         } else {
                             Bank bank = new Bank();
@@ -42,10 +44,10 @@ public class BankClient implements Runnable {
                         }
                     }
                 }
-            this.sendMessage(message);
+                this.sendMessage(message);
             }
         } catch (IOException e) {
-            System.out.println(agentSocket.getRemoteSocketAddress()+" has disconnected");
+            System.out.println(agentSocket.getRemoteSocketAddress() + " has disconnected");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -54,7 +56,6 @@ public class BankClient implements Runnable {
     public void sendMessage(Message message) throws IOException {
         oos.writeObject(message);
     }
-
 
 
 }

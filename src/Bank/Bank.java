@@ -59,4 +59,26 @@ public class Bank {
         Account tempAccount = getAccount(bankKey);
         return tempAccount.getAccountDetails();
     }
+
+    public void moveMoney(int keyA, int keyB, double amount) {
+        Account A = accountList.get(keyA);
+        Account B = accountList.get(keyB);
+
+        log("-----------------------");
+        log("Before Transaction: ");
+        A.printAccount();
+        B.printAccount();
+
+        A.withdraw(amount);
+        B.deposit(amount);
+
+        log("-----------------------");
+        log("After Transaction: ");
+        A.printAccount();
+        B.printAccount();
+    }
+
+    private void log(String msg) {
+        System.out.println(msg);
+    }
 }

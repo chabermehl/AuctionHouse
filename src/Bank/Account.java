@@ -5,13 +5,11 @@
  */
 package Bank;
 
-import java.io.Serializable;
-
 /**
  * Account class handles all of the account functionality ie. deposit, withdraw
  * Serialized is implemented as account details could be sent over a connection
  */
-public class Account implements Serializable {
+public class Account {
     private String name;
     private int accountNum;
     private double balance;

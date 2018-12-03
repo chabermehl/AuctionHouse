@@ -10,10 +10,15 @@ import java.util.Map;
 import java.util.Random;
 
 public class Bank {
-    public Map<Integer, Account> AccountList = new HashMap<>();
+    public Map<Integer, Account> accountList = new HashMap<>();
     public Random rand = new Random();
 
-    public int openNewAccount(String accountName, double initialDeposit) {
-        return 0;
+    public int bankKey;
+
+    public void openNewAccount(String accountName, double initialDeposit) {
+        int accountNumber = 1234 + accountList.size() + 1;
+        Account newAccount = new Account(accountName, accountNumber, initialDeposit);
+        bankKey = newAccount.getBankKey();
+        accountList.put(bankKey, newAccount);
     }
 }

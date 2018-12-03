@@ -8,10 +8,13 @@ package Bank;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.LinkedList;
+import java.util.List;
 
 public class BankServer {
 
     public int portNumber;
+    public List<BankClient> clients = new LinkedList<>();
 
     public BankServer(int portNumber) {
         this.portNumber = portNumber;
@@ -31,6 +34,7 @@ public class BankServer {
                     "Add something about auctions houses you can choose here.\n"));
             Thread t = new Thread(bankClient);
             t.start();
+            clients.add(bankClient);
         }
     }
 }

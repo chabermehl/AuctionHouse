@@ -15,6 +15,11 @@ public class Bank {
 
     public int bankKey;
 
+    /**
+     * opens a new account with the name and initial deposit
+     * @param accountName name the account will have
+     * @param initialDeposit the initial deposit to be placed in the account
+     */
     public void openNewAccount(String accountName, double initialDeposit) {
         int accountNumber = 1234 + accountList.size() + 1;
         Account newAccount = new Account(accountName, accountNumber, initialDeposit);

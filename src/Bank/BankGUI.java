@@ -48,19 +48,6 @@ public class BankGUI extends Application {
         grid.setVgap(5);
         grid.setHgap(5);
 
-        Label addAuctionLabel = new Label("Add an Auction House here.\n" +
-                "<Host Name> <Port Number>");
-        GridPane.setConstraints(addAuctionLabel,0,0);
-        TextField auctionHouse = new TextField();
-        auctionHouse.setPrefColumnCount(10);
-        Button addAuction = new Button("Add Auction");
-        addAuction.setOnAction(event -> {
-            auctionHouses.add(auctionHouse.getText());
-            auctionHouse.setText("");
-        });
-        GridPane.setConstraints(auctionHouse,0,2);
-        GridPane.setConstraints(addAuction, 0, 3);
-
         //code for getting port number to start server
         Label startServerLabel = new Label("Enter a Port Number for the Server To Run On");
         GridPane.setConstraints(startServerLabel,0,7);
@@ -77,7 +64,7 @@ public class BankGUI extends Application {
         });
         GridPane.setConstraints(startServerButton, 0, 9);
 
-        grid.getChildren().addAll(addAuctionLabel, auctionHouse, addAuction, startServerLabel, portNum, startServerButton);
+        grid.getChildren().addAll(startServerLabel, portNum, startServerButton);
         Scene scene = new Scene(grid, 500, 500);
         window.setScene(scene);
         window.show();

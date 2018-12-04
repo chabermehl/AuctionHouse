@@ -85,6 +85,13 @@ public class SerialAgentClient implements Runnable {
                 inLine = new BufferedReader(new InputStreamReader(System.in));
                 socket = new Socket(address, port);
                 sender = new MessageSender(socket, name, inLine);
+                receiver = new MessageReceiver(socket);
+
+                Thread senderThread = new Thread(sender);
+                Thread receiverThread = new Thread(receiver);
+
+                senderThread.start();
+                receiverThread.start();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -104,7 +111,7 @@ public class SerialAgentClient implements Runnable {
         t.start();
     }
 
-    public class MessageSender {
+    public class MessageSender implements Runnable {
 
         public ObjectOutputStream oos;
         public Socket socket;
@@ -117,9 +124,14 @@ public class SerialAgentClient implements Runnable {
             this.inLine = inLine;
             oos = new ObjectOutputStream(socket.getOutputStream());
         }
+
+        @Override
+        public void run() {
+
+        }
     }
 
-    public class MessageReceiver {
+    public class MessageReceiver implements Runnable {
 
         public Socket socket;
         public ObjectInputStream ois;
@@ -127,6 +139,11 @@ public class SerialAgentClient implements Runnable {
         public MessageReceiver(Socket socket) throws IOException {
             this.socket = socket;
             ois = new ObjectInputStream(socket.getInputStream());
+        }
+
+        @Override
+        public void run() {
+
         }
     }
 

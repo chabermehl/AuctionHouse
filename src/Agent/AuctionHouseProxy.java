@@ -86,8 +86,8 @@ public class AuctionHouseProxy extends Thread{
         }
         return returnedVal;
     }
-    public String bid(int itemId){
-        String message = "bid;"+itemId;
+    public String bid(String itemId,double amount){
+        String message = "bid;"+itemId+";"+amount;
         return communicate(message);
     }
 

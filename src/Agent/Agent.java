@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class Agent{
     private static Map<String,NotificationListener> notificationListenerMap = new HashMap<>();
     private static Map<String,AuctionHouseProxy> auctionHouseProxyMap = new HashMap<>();
+    private static LinkedList<String> itemIDs = new LinkedList<>();
     private static class NotificationListener extends Thread{
         AuctionHouseProxy auctionHouseProxy;
         public NotificationListener(AuctionHouseProxy auctionHouseProxy){
@@ -51,7 +52,7 @@ public class Agent{
                 String ip;
                 String port;
                 try {
-                    id = Integer.parseInt(str[str.length - 1]);
+                    id = Integer.parseInt(str[1]);
                     ip = auctionHouses.get(id).get(1);
                     port = auctionHouses.get(id).get(2);
                 }
@@ -76,8 +77,37 @@ public class Agent{
                 }
                 auctionHouseProxyMap.remove(ip).terminate();
             }
+            // bid on itemId for amount in auctionhouse
             else if(input.contains("bid on")){
+                String [] str = input.split("on ");
+                String [] str2 = input.split("for ");
+                String [] str3 = input.split("in");
+                String itemId = "";
+                double amount = 0;
+                String auctionHouse = "";
+                String ip;
+                String port;
+                try {
+                    itemId = str[1].split(" ")[0];
+                    amount = Double.parseDouble(str2[1].split(" ")[0]);
+                    auctionHouse = str3[1];
+                    ip = auctionHouses.get(Integer.parseInt(auctionHouse)).get(1);
+                    port = auctionHouses.get(Integer.parseInt(auctionHouse)).get(2);
+                }
+                catch (Exception e){
+                    System.out.println("ERROR: incorrect bidding format, try again");
+                    input=sc.nextLine();
+                    continue;
+                }
+                if(!auctionHouseProxyMap.keySet().contains(ip)) {
+                    auctionHouseProxyMap.put(ip,new AuctionHouseProxy(ip, port));
+                    notificationListenerMap.put(ip,new NotificationListener(auctionHouseProxyMap.get(ip)));
+                }
+                else if(!notificationListenerMap.keySet().contains((ip))){
+                    notificationListenerMap.put(ip,new NotificationListener(auctionHouseProxyMap.get(ip)));
+                }
 
+                auctionHouseProxyMap.get(ip).bid(itemId,amount);
             }
             input=sc.nextLine();
         }

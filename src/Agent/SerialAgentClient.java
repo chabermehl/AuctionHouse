@@ -1,9 +1,6 @@
 package Agent;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 
 public class SerialAgentClient implements Runnable {
@@ -70,6 +67,9 @@ public class SerialAgentClient implements Runnable {
         public String address;
         public int port;
 
+        public MessageSender sender;
+        public MessageReceiver receiver;
+
         BufferedReader inLine;
 
         public CreateConnection(String name, Socket socket, String address, int port) {
@@ -84,6 +84,7 @@ public class SerialAgentClient implements Runnable {
             try {
                 inLine = new BufferedReader(new InputStreamReader(System.in));
                 socket = new Socket(address, port);
+                sender = new MessageSender(socket, name, inLine);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -118,7 +119,15 @@ public class SerialAgentClient implements Runnable {
         }
     }
 
-    public class MessageReciever {
+    public class MessageReceiver {
+
+        public Socket socket;
+        public ObjectInputStream ois;
+
+        public MessageReceiver(Socket socket) throws IOException {
+            this.socket = socket;
+            ois = new ObjectInputStream(socket.getInputStream());
+        }
     }
 
     private void log(String msg) {

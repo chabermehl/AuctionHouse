@@ -5,14 +5,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class SerialAgentClient extends Thread {
+public class SerialAgentClient implements Runnable {
 
     public BufferedReader inLine;
     public SerialAgent agent;
 
     public static void main(String[] args) {
         SerialAgentClient agentClient = new SerialAgentClient();
-        agentClient.start();
+        Thread t = new Thread(agentClient);
+        t.start();
     }
 
     @Override

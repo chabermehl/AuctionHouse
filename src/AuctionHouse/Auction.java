@@ -22,7 +22,6 @@ public class Auction extends Thread {
     private long auctionID;
 
 
-
     public Auction(String itemName, String description, double minimumBid) {
         this.itemName = itemName;
         this.description = description;

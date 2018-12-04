@@ -5,33 +5,92 @@
  */
 package Bank;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * Outward facing bank class that is interacted with
- * Created in BankServer as a "proxy"
- * Implements runnable as it has a socket connection
- */
-public class Bank implements Runnable {
+public class Bank {
+    public static Map<Integer, Account> accountList = new HashMap<>();
+    public static Map<Integer, Account> auctionList = new HashMap<>();
 
-    private Socket agentSocket;
-    private PrintWriter out;
-    private BufferedReader in;
+    public static int bankKey;
 
-    public Bank(Socket agentSocket) throws IOException {
-            this.agentSocket = agentSocket;
-            out = new PrintWriter(agentSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(agentSocket.getInputStream()));
+    /**
+     * opens a new account with the name and initial deposit
+     *
+     * @param accountName    name the account will have
+     * @param initialDeposit the initial deposit to be placed in the account
+     */
+    public static void openNewAccount(String accountName, double initialDeposit, String accountType) {
+        if ("Agent".equals(accountType)) {
+            int accountNumber = 12348 + accountList.size() + 1;
+            Account newAccount = new Account(accountName, accountNumber, initialDeposit);
+            bankKey = newAccount.getBankKey();
+            accountList.put(bankKey, newAccount);
+        } else if ("Auction".equals(accountType)) {
+            int accountNumber = 84321 + auctionList.size() + 1;
+            Account newAccount = new Account(accountName, accountNumber, 0);
+            bankKey = newAccount.getBankKey();
+            accountList.put(bankKey, newAccount);
+        }
     }
 
-    @Override
-    public void run() {
-        String inputLine = null;
-        String outputLine;
+    public static int getBankKey() {
+        return bankKey;
     }
 
+    public static Account getAccount(int bankKey) {
+        return accountList.get(bankKey);
+    }
+
+    public static synchronized void setAccountHold(int bankKey, double bid) {
+        accountList.get(bankKey).setAmountLocked(bid);
+    }
+
+    public static synchronized void unlockAccount(int bankKey) {
+        accountList.get(bankKey).resetAccountHolds();
+    }
+
+    public static double getBalance(int bankKey) {
+        Account tempAccount = getAccount(bankKey);
+        return tempAccount.getBalance();
+    }
+
+    public static boolean hasEnoughFunds(int bankKey, double bid) {
+        return getAccount(bankKey).hasFunds(bid);
+    }
+
+    public static boolean isValidKey(int bankKey) {
+        if (accountList.containsKey(bankKey)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static String getAccountDetails(int bankKey) {
+        Account tempAccount = getAccount(bankKey);
+        return tempAccount.getAccountDetails();
+    }
+
+    public static void moveMoney(int keyA, int keyB, double amount) {
+        Account A = accountList.get(keyA);
+        Account B = accountList.get(keyB);
+
+        log("-----------------------");
+        log("Before Transaction: ");
+        A.printAccount();
+        B.printAccount();
+
+        A.withdraw(amount);
+        B.deposit(amount);
+
+        log("-----------------------");
+        log("After Transaction: ");
+        A.printAccount();
+        B.printAccount();
+    }
+
+    private static void log(String msg) {
+        System.out.println(msg);
+    }
 }

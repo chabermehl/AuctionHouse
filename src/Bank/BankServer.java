@@ -5,73 +5,57 @@
  */
 package Bank;
 
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-
-
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.LinkedList;
+import java.util.List;
 
-/**
- * Acts as the backend of the bank
- * Opens a gui that asks for a port number to run the server on
- * Every time someone connects a new Bank thread is started in order to handle
- * that user so they do not interfere with each other
- */
-public class BankServer extends Application {
+public class BankServer extends Thread {
 
-    private Stage window;
+    public int portNumber;
+    public List<BankClient> clients = new LinkedList<>();
+    public ServerSocket serverSocket;
 
-    public static void main(String[] args) {
-        launch(args);
+    public BankServer(int portNumber) throws IOException {
+        this.portNumber = portNumber;
+        serverSocket = new ServerSocket(portNumber);
+        InetAddress ip;
+        try {
+            ip = InetAddress.getLocalHost();
+            System.out.println("Current IP: " + ip);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void startBankServer(BankServer bankServer) {
+        bankServer.start();
     }
 
     @Override
-    public void start(Stage primaryStage) {
-        window = primaryStage;
-        window.setTitle("Bank Server");
-        startScene();
-    }
-
-    private void startScene() {
-        GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10,10,10,10));
-        grid.setVgap(5);
-        grid.setHgap(5);
-        TextField portNum = new TextField();
-        portNum.setPromptText("What is the port number?");
-        portNum.setPrefColumnCount(10);
-        portNum.getText();
-        GridPane.setConstraints(portNum, 0, 0);
-        grid.getChildren().add(portNum);
-
-        Button startServerButton = new Button("Start Server");
-        startServerButton.setOnAction(event -> {
+    public void run() {
+        System.out.println("Listening for clients on port: " + serverSocket.getLocalPort());
+        while (true) {
             try {
-                startServer(Integer.parseInt(portNum.getText()));
+                Socket clientSocket = serverSocket.accept();
+                BankClient bankClient = new BankClient(clientSocket);
+                bankClient.sendMessage(new Message("BANK SERVER", "Welcome!\n" +
+                        "To create an account, use the command: InitializeAccount <Name> <Initial Deposit> <Type of Account>\n" +
+                        "For example: InitializeAccount Steve 400 Agent\n" +
+                        "---------------------------------------------\n" +
+                        "To check your balance, use the command: balance,<bankKey>\n" +
+                        "---------------------------------------------\n" +
+                        "Add something about auctions houses you can choose here.\n"));
+                Thread t = new Thread(bankClient);
+                t.start();
+                clients.add(bankClient);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });
 
-    }
-
-    private void startServer(int portNumber) throws IOException {
-
-        ServerSocket serverSocket = new ServerSocket(portNumber);
-
-        while (true) {
-            Socket agentSocket = serverSocket.accept();
-            Bank bank = new Bank(agentSocket);
-            Thread t = new Thread(bank);
-            t.start();
         }
-
     }
 }

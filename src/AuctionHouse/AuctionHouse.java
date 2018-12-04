@@ -4,7 +4,6 @@ import Bank.Message;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
 
@@ -49,10 +48,30 @@ public class AuctionHouse {
         // Make a list of auctioned items for testing
         // t1 = record the time
         while(true) {
+            Message message = readMessageFromBank();
+            if(message != null)
+            {
+                // Process different messages from the bank
+                if(message.dataInfo.equals("GetItems"))
+                {
+                    // Send message to bank with the items
+                }
 
+            }
         }
         // wait for a command to terminate
         // closeBankAccount();
+    }
+
+    private Message readMessageFromBank()
+    {
+        Object objIn = null;
+        try {
+            objIn = ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return objIn != null ? (Message)objIn : null;
     }
 
     private void connectToBank() {

@@ -28,7 +28,6 @@ import java.util.List;
 public class BankGUI extends Application {
 
     private Stage window;
-    private List<String> auctionHouses = new LinkedList<>();
 
     public static void main(String[] args) {
         launch(args);

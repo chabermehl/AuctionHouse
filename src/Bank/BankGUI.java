@@ -13,11 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-
 
 /**
  * Acts as the backend of the bank
@@ -33,6 +29,10 @@ public class BankGUI extends Application {
         launch(args);
     }
 
+    /**
+     * starts the gui
+     * @param primaryStage
+     */
     @Override
     public void start(Stage primaryStage) {
         window = primaryStage;
@@ -40,7 +40,10 @@ public class BankGUI extends Application {
         startScene();
     }
 
-
+    /**
+     * called in the start method
+     * holds the gui code and calls all the necessary methods when the buttons are pushed
+     */
     private void startScene() {
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10, 10, 10, 10));
@@ -70,6 +73,10 @@ public class BankGUI extends Application {
 
     }
 
+    /**
+     * takes in a port number to start the server on
+     * @param portNumber port number for the server to run on
+     */
     private void startServer(int portNumber) {
         try {
             BankServer bankServer = new BankServer(portNumber);

@@ -1,3 +1,8 @@
+/**
+ * Created by chabermehl
+ * 12/04/18
+ * CS 351
+ */
 package Agent;
 
 import java.io.*;
@@ -61,6 +66,10 @@ public class SerialAgentClient implements Runnable {
         }
     }
 
+    /**
+     * this class handles the making of connections
+     * threaded so we can send objects across the connections
+     */
     public class CreateConnection implements Runnable {
         public String name;
         public Socket socket;
@@ -99,18 +108,33 @@ public class SerialAgentClient implements Runnable {
         }
     }
 
+    /**
+     * connects the agent to the bank
+     * @param name name of the agent
+     * @param address host of the bank
+     * @param port port the bank is on
+     */
     public void connectBank(String name, String address, int port) {
         bank = new CreateConnection(name, new Socket(), address, port);
         Thread t = new Thread(bank);
         t.start();
     }
 
+    /**
+     * connects the agent to the auction house of their choosing
+     * @param name name of the agent
+     * @param address host of the auction
+     * @param port port the auction is on
+     */
     public void connectAuction(String name, String address, int port) {
         auction = new CreateConnection(name, new Socket(), address, port);
         Thread t = new Thread(auction);
         t.start();
     }
 
+    /**
+     * handles sending out messages to the bank or auction house
+     */
     public class MessageSender implements Runnable {
 
         public ObjectOutputStream oos;
@@ -131,6 +155,9 @@ public class SerialAgentClient implements Runnable {
         }
     }
 
+    /**
+     * handles the reception of the incoming objects on the socket
+     */
     public class MessageReceiver implements Runnable {
 
         public Socket socket;
@@ -147,6 +174,10 @@ public class SerialAgentClient implements Runnable {
         }
     }
 
+    /**
+     * prints a message to the console
+     * @param msg string value to printed
+     */
     private void log(String msg) {
         System.out.println(msg);
     }

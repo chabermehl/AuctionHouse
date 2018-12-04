@@ -2,7 +2,7 @@ package Agent;
 
 import java.net.Socket;
 
-public class CreateConnection extends Thread {
+public class CreateConnection implements Runnable {
     public String name;
     public Socket socket;
     public String address;
@@ -13,6 +13,11 @@ public class CreateConnection extends Thread {
         this.socket = socket;
         this.address = address;
         this.port = port;
+    }
+
+    @Override
+    public void run() {
+
     }
 
 }

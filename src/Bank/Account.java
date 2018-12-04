@@ -5,13 +5,11 @@
  */
 package Bank;
 
-import java.io.Serializable;
-
 /**
  * Account class handles all of the account functionality ie. deposit, withdraw
  * Serialized is implemented as account details could be sent over a connection
  */
-public class Account implements Serializable {
+public class Account {
     private String name;
     private int accountNum;
     private double balance;
@@ -98,7 +96,7 @@ public class Account implements Serializable {
      * gets the string representation of the account
      * @return string representation of the account
      */
-    public String getAccount() {
+    public String getAccountDetails() {
         stringBuilder.append("----------------------------------" + "\n");
         stringBuilder.append("Account Name: " + this.name + "\n");
         stringBuilder.append("Account Number: " + this.accountNum + "\n");

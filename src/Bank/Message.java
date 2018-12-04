@@ -19,8 +19,9 @@ public class Message implements Serializable {
 
     /**
      * holds data to send a message object between classes
+     *
      * @param request action to be done be message receiver
-     * @param data data used when message is received
+     * @param data    data used when message is received
      */
     public Message(String dataInfo, String data) {
         this.dataInfo = dataInfo;

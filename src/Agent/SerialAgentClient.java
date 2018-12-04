@@ -1,5 +1,4 @@
 package Agent;
-import Bank.Message;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,20 +27,20 @@ public class SerialAgentClient implements Runnable {
             log("Enter Your Name: ");
             String name = inLine.readLine();
             agent = new SerialAgent(name);
-            while(true) {
-                if(newConnection) {
+            while (true) {
+                if (newConnection) {
                     newConnection = false;
                     log("Start A New Connection?\n" +
                             "Type \"Bank\" or \"Auction\" to connect.\n");
                     String newInLine = inLine.readLine();
-                    if(newInLine.contains("Bank")) {
+                    if (newInLine.contains("Bank")) {
                         log("What host and port is the Bank on?\n" +
                                 "<host> <port>\n");
                         newInLine = inLine.readLine();
                         String[] input = newInLine.split(" ");
                         log("Connecting to the Bank...");
                         connectBank(name, input[0], Integer.parseInt(input[1]));
-                    } else if(newInLine.contains("Auction")) {
+                    } else if (newInLine.contains("Auction")) {
                         log("What host and port is the Auction on?\n" +
                                 "<host> <port>\n");
                         newInLine = inLine.readLine();
@@ -60,10 +59,11 @@ public class SerialAgentClient implements Runnable {
                     }
                 }
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     public class CreateConnection implements Runnable {
         public String name;
         public Socket socket;
@@ -89,7 +89,6 @@ public class SerialAgentClient implements Runnable {
                 e.printStackTrace();
             }
         }
-
     }
 
     public void connectBank(String name, String address, int port) {

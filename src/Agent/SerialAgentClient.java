@@ -15,6 +15,7 @@ public class SerialAgentClient implements Runnable {
     public CreateConnection bank;
     public CreateConnection auction;
     public boolean newConnection = true;
+    public boolean hasWon = false;
 
     public static void main(String[] args) {
         SerialAgentClient agentClient = new SerialAgentClient();

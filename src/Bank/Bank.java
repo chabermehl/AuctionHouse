@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class Bank {
     public static Map<Integer, Account> accountList = new HashMap<>();
-    public static Map<Integer, Account> auctionList = new HashMap<>();
+    public static Map<String, Account> auctionList = new HashMap<>();
 
     public static int bankKey;
 
@@ -31,6 +31,7 @@ public class Bank {
             Account newAccount = new Account(accountName, accountNumber, 0);
             bankKey = newAccount.getBankKey();
             accountList.put(bankKey, newAccount);
+            auctionList.put(accountName, newAccount);
         }
     }
 

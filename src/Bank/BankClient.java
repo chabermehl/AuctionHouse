@@ -33,9 +33,9 @@ public class BankClient implements Runnable {
             while (true) {
                 Message message = (Message) ois.readObject();
                 if (message.data != null && !message.data.isEmpty()) {
-                    String[] inMessage = message.data.split(" ");
-                    if (message.data.contains("InitializeAccount")) {
-                        if (inMessage.length != 3) {
+                    String[] inMessage = message.data.split(";");
+                    if (message.data.contains("createAccount")) {
+                        if (inMessage.length != 4) {
                             message = new Message("Incorrect Input", "Incorrect Input");
                         } else {
                             Bank.openNewAccount(inMessage[1], Double.parseDouble(inMessage[2]), inMessage[3]);
@@ -66,6 +66,8 @@ public class BankClient implements Runnable {
                         int bankKeyB = Integer.parseInt(inMessage[2]);
                         double amount = Double.parseDouble(inMessage[3]);
                         Bank.moveMoney(bankKeyA, bankKeyB, amount);
+                    } else if (message.data.contains("getAuctionHouses")) {
+
                     }
                 }
                 this.sendMessage(message);

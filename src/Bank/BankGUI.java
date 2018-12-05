@@ -13,11 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-
 
 /**
  * Acts as the backend of the bank
@@ -28,12 +24,15 @@ import java.util.List;
 public class BankGUI extends Application {
 
     private Stage window;
-    private List<String> auctionHouses = new LinkedList<>();
 
     public static void main(String[] args) {
         launch(args);
     }
 
+    /**
+     * starts the gui
+     * @param primaryStage
+     */
     @Override
     public void start(Stage primaryStage) {
         window = primaryStage;
@@ -41,25 +40,15 @@ public class BankGUI extends Application {
         startScene();
     }
 
-
+    /**
+     * called in the start method
+     * holds the gui code and calls all the necessary methods when the buttons are pushed
+     */
     private void startScene() {
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10, 10, 10, 10));
         grid.setVgap(5);
         grid.setHgap(5);
-
-        Label addAuctionLabel = new Label("Add an Auction House here.\n" +
-                "<Host Name> <Port Number>");
-        GridPane.setConstraints(addAuctionLabel,0,0);
-        TextField auctionHouse = new TextField();
-        auctionHouse.setPrefColumnCount(10);
-        Button addAuction = new Button("Add Auction");
-        addAuction.setOnAction(event -> {
-            auctionHouses.add(auctionHouse.getText());
-            auctionHouse.setText("");
-        });
-        GridPane.setConstraints(auctionHouse,0,2);
-        GridPane.setConstraints(addAuction, 0, 3);
 
         //code for getting port number to start server
         Label startServerLabel = new Label("Enter a Port Number for the Server To Run On");
@@ -77,13 +66,17 @@ public class BankGUI extends Application {
         });
         GridPane.setConstraints(startServerButton, 0, 9);
 
-        grid.getChildren().addAll(addAuctionLabel, auctionHouse, addAuction, startServerLabel, portNum, startServerButton);
+        grid.getChildren().addAll(startServerLabel, portNum, startServerButton);
         Scene scene = new Scene(grid, 500, 500);
         window.setScene(scene);
         window.show();
 
     }
 
+    /**
+     * takes in a port number to start the server on
+     * @param portNumber port number for the server to run on
+     */
     private void startServer(int portNumber) {
         try {
             BankServer bankServer = new BankServer(portNumber);

@@ -3,7 +3,9 @@
  * 12/04/18
  * CS 351
  */
-package Agent;
+package Bank;
+
+import SerialAgent;
 
 import java.io.*;
 import java.net.Socket;

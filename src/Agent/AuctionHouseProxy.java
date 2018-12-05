@@ -1,9 +1,8 @@
 package Agent;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import Bank.Message;
+
+import java.io.*;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.concurrent.BlockingQueue;
@@ -11,15 +10,19 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class AuctionHouseProxy extends Thread{
     private Socket socket;
-    private PrintWriter out;
-    private BufferedReader in;
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
+    //private PrintWriter out;
+    //private BufferedReader in;
     private BlockingQueue<String> queue = new LinkedBlockingQueue<>();
     private BlockingQueue<String> notificationQueue = new LinkedBlockingQueue<>();
     public AuctionHouseProxy(String ip,String port){
         try {
             socket = new Socket(ip, Integer.parseInt(port));
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            //out = new PrintWriter(socket.getOutputStream(), true);
+            //in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
         }
         catch (IOException e){
             System.out.println("Error in AuctionHouseProxy");
@@ -44,10 +47,16 @@ public class AuctionHouseProxy extends Thread{
     public void run(){
         String message="";
         try {
-            message = in.readLine();
+            //message = in.readLine();
+            Message m = (Message)in.readObject();
+            //message = m.dataInfo+";"+m.data;
+            message = m.data;
         }
         catch (IOException e){
             System.out.println("IO Exception in AuctionHouseProxy");
+        }
+        catch (ClassNotFoundException e){
+            System.out.println("ClassNotFoundException in AuctionHouseProxy");
         }
         if (message.split(";")[0].equals("#")){
             try {
@@ -76,7 +85,22 @@ public class AuctionHouseProxy extends Thread{
         }
     }
     private String communicate(String message){
-        out.println(message);
+        String dataInfo = "";
+        String data = "";
+        if(message.contains(";")){
+            dataInfo = message.split(";")[0];
+            data = message.split(dataInfo+";")[1];
+        }
+        else{
+            dataInfo = message;
+            data = "";
+        }
+        try {
+            out.writeObject(new Message(dataInfo, data));
+        }catch (IOException e){
+            System.out.println("There is an IO exception");
+        }
+        //out.println(message);
         String returnedVal = "";
         try {
             returnedVal = queue.take();

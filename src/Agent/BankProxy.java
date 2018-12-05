@@ -1,22 +1,26 @@
 package Agent;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import Bank.Message;
+
+import java.io.*;
 import java.lang.reflect.Array;
 import java.net.Socket;
 import java.util.*;
 
 public class BankProxy {
+    //private Socket socket;
+    //private PrintWriter out;
+    //private BufferedReader in;
     private Socket socket;
-    private PrintWriter out;
-    private BufferedReader in;
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
     public BankProxy(String ip,String port){
         try {
             socket = new Socket(ip, Integer.parseInt(port));
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            //out = new PrintWriter(socket.getOutputStream(), true);
+            //in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
         }
         catch (IOException e){
             System.out.println("Error in bank proxy");
@@ -41,13 +45,32 @@ public class BankProxy {
         return Integer.parseInt(returnVal);
     }
     private String communicate(String message){
-        out.println(message);
+        String dataInfo = "";
+        String data = "";
+        if(!message.contains(";")){
+            dataInfo = message;
+            data = "";
+        }
+        else{
+            dataInfo = message.split(";")[0];
+            data = message.split(dataInfo+";")[1];
+        }
+        try {
+            out.writeObject(new Message(dataInfo, data));
+        }catch (IOException e){
+            System.out.println("There is an IO exception in BankProxy");
+        }
+        //out.println(message);
         String returnedVal = "";
         try {
-            returnedVal = in.readLine();
+            //returnedVal = in.readLine();
+            Message m = (Message)in.readObject();
+            returnedVal = m.data;
         }
         catch (IOException e){
             System.out.println("IO exception in bank proxy");
+        } catch (ClassNotFoundException e) {
+            System.out.println("ClassNotFoundException in bankproxy");
         }
         return returnedVal;
     }
@@ -69,6 +92,11 @@ public class BankProxy {
         String message = "releaseLock;"+amount;
         String returnVal = communicate(message);
     }
+    public boolean transferMoney(String ip,double amount){
+        String message = "transferMoney;"+ip+";"+amount;
+        String returnVal = communicate(message);
+        return Boolean.getBoolean(returnVal);
+    }
     public void closeAcount(int acountNum){
         String message = "releaseLock;"+acountNum;
         String returnVal = communicate(message);
@@ -86,6 +114,7 @@ public class BankProxy {
         }
         return list;
     }
+
     public String getAuctionHouseIp(int id){
         String message = "lockBalance;"+id;
         return communicate(message);

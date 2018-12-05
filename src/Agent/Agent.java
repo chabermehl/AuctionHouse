@@ -30,7 +30,7 @@ public class Agent{
      */
     public static void main(String []args){
         BankProxy bankProxy = new BankProxy(args[2],args[3]);
-        int acountnum = bankProxy.createAcount(args[0],Integer.getInteger(args[1]),"","",false);
+        int acountnum = bankProxy.createAcount(args[0],Integer.parseInt(args[1]),"","",false);
         int key = bankProxy.getKey(acountnum);
         Scanner sc = new Scanner(System.in);
         String input = sc.nextLine();

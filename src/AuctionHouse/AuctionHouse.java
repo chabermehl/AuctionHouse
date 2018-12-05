@@ -145,7 +145,7 @@ public class AuctionHouse {
 
     public void acceptBid(int key,String item) {
         // accept the bid from agent proxy
-        // remove funds from acount
+        // remove funds from account
     }
 
     // Bid is rejected if the incoming bid doesn't meet the minimum required,

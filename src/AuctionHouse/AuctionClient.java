@@ -26,7 +26,9 @@ public class AuctionClient extends Thread {
         {
             // Process messages from agent
             Message message = readMessage();
-            processMessage(message);
+            if(message != null) {
+                processMessage(message);
+            }
         }
     }
 

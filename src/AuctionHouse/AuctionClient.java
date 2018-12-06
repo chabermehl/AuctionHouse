@@ -27,8 +27,7 @@ public class AuctionClient extends Thread {
         }
     }
 
-    public void run()
-    {
+    public void run() {
         while(!socket.isClosed()) {
             // Process messages from agent
             Message message = readMessage();
@@ -38,14 +37,18 @@ public class AuctionClient extends Thread {
         }
     }
 
-    private void processMessage(Message message)
-    {
+    private void processMessage(Message message) {
         String dataInfo = message.dataInfo;
 
         // Attempt to bid. Send a response back to the agent with results
         if(dataInfo.equals("Bid")) {
             String[] params = message.dataInfo.split(",");
-            if(params.length != 3) {return;} // Not the correct parameter amount
+            if(params.length != 3)
+            {
+                // Not the correct parameter amount
+                sendMessage(new Message("Incorrect Bid Input", ""));
+                return;
+            }
 
             int key = Integer.parseInt(params[0]);
             // Set our key if the agent hasn't bid yet.
@@ -59,8 +62,7 @@ public class AuctionClient extends Thread {
         }
     }
 
-    private Message readMessage()
-    {
+    private Message readMessage() {
         Object obj = null;
         try {
             obj = ois.readObject();
@@ -70,8 +72,7 @@ public class AuctionClient extends Thread {
         return obj != null ? (Message)obj : null;
     }
 
-    public void sendMessage(Message message)
-    {
+    public void sendMessage(Message message) {
         try {
             oos.writeObject(message);
         } catch (IOException e) {

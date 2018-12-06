@@ -84,7 +84,7 @@ public class AuctionHouse {
             ois = new ObjectInputStream(bankSocket.getInputStream());
 
             // Create an account with zero balance
-            sendMessageToBank(new Message("createAccount", "0,true"));
+            sendMessageToBank(new Message("InitializeAccount", "AuctionHouse" + houseID + ";0;AuctionHouse"));
         } catch (IOException e) {
             System.out.println("Error: Could not connect to bank");
             e.printStackTrace();

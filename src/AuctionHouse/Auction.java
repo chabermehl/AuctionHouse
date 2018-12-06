@@ -17,7 +17,9 @@ public class Auction extends Thread {
     private double minimumBid; // Minimum bid to get the auction rolling
     private volatile boolean hasBeenBiddedOn = false;
     private Instant beginTime;
+    private AuctionHouse ahouse;
 
+    // Create unique auction IDs.
     private static long auctionCount = 0;
     private long auctionID;
 

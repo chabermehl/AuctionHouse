@@ -84,7 +84,7 @@ public class AuctionHouse {
             ois = new ObjectInputStream(bankSocket.getInputStream());
 
             // Create an account with zero balance
-            sendMessageToBank(new Message("Create Account", "0,true"));
+            sendMessageToBank(new Message("createAccount", "0,true"));
         } catch (IOException e) {
             System.out.println("Error: Could not connect to bank");
             e.printStackTrace();
@@ -111,6 +111,12 @@ public class AuctionHouse {
 
     public void closeBankAccount() {
         sendMessageToBank(new Message("Close Account", ""));
+    }
+
+    public void auctionDone(Auction auction) {
+        ahServer.getClientByKey(auction.getBidderKey()).sendMessage(new Message("Bid Winner",""));
+        sendMessageToBank(new Message("Transfer Funds", ""));
+        currentAuctions.remove(auction);
     }
 
     private Auction getAuctionByName(String name) {

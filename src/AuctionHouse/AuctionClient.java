@@ -26,13 +26,11 @@ public class AuctionClient extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public void run()
     {
-        while(!socket.isClosed())
-        {
+        while(!socket.isClosed()) {
             // Process messages from agent
             Message message = readMessage();
             if(message != null) {
@@ -46,8 +44,7 @@ public class AuctionClient extends Thread {
         String dataInfo = message.dataInfo;
 
         // Attempt to bid. Send a response back to the agent with results
-        if(dataInfo.equals("Bid"))
-        {
+        if(dataInfo.equals("Bid")) {
             String[] params = message.dataInfo.split(",");
             if(params.length != 3) {return;} // Not the correct parameter amount
 
@@ -55,11 +52,9 @@ public class AuctionClient extends Thread {
             // Set our key if the agent hasn't bid yet.
             if(agentKey == -1) {agentKey = key;}
             boolean bidSuccess = ahServer.auctionHouse.bid(key, params[1], Double.parseDouble(params[2]));
-            if(bidSuccess)
-            {
+            if(bidSuccess) {
                 sendMessage(new Message("accept", ""));
-            } else
-            {
+            } else {
                 sendMessage(new Message("reject", ""));
             }
         }
@@ -85,6 +80,6 @@ public class AuctionClient extends Thread {
         }
     }
 
-    public int getAgentKey() {return agentKey;}
+    public int getAgentKey() { return agentKey; }
 
 }

@@ -52,7 +52,7 @@ public class AuctionHouse {
             if(message != null)
             {
                 // Process different messages from the bank
-                if(message.dataInfo.equals("GetItems"))
+                if(message.dataInfo.equals("GetAuctions"))
                 {
                     // Send message to bank with the items
                 }
@@ -127,37 +127,29 @@ public class AuctionHouse {
         return null;
     }
 
-    public synchronized void bid(int key, String name, double amount) {
+    public synchronized boolean bid(int key, String name, double amount) {
         Auction auction = getAuctionByName(name);
-        if(auction != null) {
-            if(amount >= auction.getCurrentBid() + auction.getMinimumBid())
-            {
-                // Try to freeze funds
-                sendMessageToBank(new Message("Freeze Funds", Integer.toString(key) + "," + Double.toString(amount)));
-                // if that worked, unfreeze the funds of the bidder that got passed and notify them
-                sendMessageToBank(new Message("Unfreeze Funds", Integer.toString(key) + Double.toString(auction.getCurrentBid())));
+        if(auction == null) {return false;}
 
-                // Update that auction to reset it's timer
-                auction.setBid(key, amount);
-            }
+        // Make sure the amount to bid is correct.
+        if(amount >= auction.getCurrentBid() + auction.getMinimumBid())
+        {
+            // Try to freeze funds
+            sendMessageToBank(new Message("Freeze Funds", Integer.toString(key) + "," + Double.toString(amount)));
+            sendMessageToBank(new Message("Unfreeze Funds", Integer.toString(key) + Double.toString(auction.getCurrentBid())));
+
+            // Find the previous bidder by ID, send them a pass notification
+            ahServer.getClientByKey(auction.getBidderKey()).sendMessage(new Message("Pass", ""));
+
+            // Update that auction to reset it's timer
+            auction.setBid(key, amount);
+            return true;
         }
+        return false;
     }
-
-    public void acceptBid(int key,String item) {
-        // accept the bid from agent proxy
-        // remove funds from account
-    }
-
-    // Bid is rejected if the incoming bid doesn't meet the minimum required,
-    // or agent tries to bid with more money than they have
-    public void rejectBid(int key,String item){
-        // reject the bid from agent proxy
-        // unblock the money from bank proxy
-    }
-
 
     // item format is: (house id, item id, description, minimum bid, current bid)
-    public LinkedList<LinkedList<String>> getItems() {
+    public synchronized LinkedList<LinkedList<String>> getItems() {
         return null;
     }
 }

@@ -4,6 +4,8 @@ import Bank.Message;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.LinkedList;
 
 /**
  * Auction House server class used as a sort of proxy, I guess.
@@ -12,8 +14,9 @@ import java.net.ServerSocket;
 public class AuctionHouseServer extends Thread {
 
     private int port;
-    private AuctionHouse auctionHouse;
+    public AuctionHouse auctionHouse;
     private ServerSocket serverSocket;
+    private LinkedList<AuctionClient> clients = new LinkedList<AuctionClient>();
 
     public AuctionHouseServer(int port, AuctionHouse ahouse) {
         this.port = port; this.auctionHouse = ahouse;
@@ -24,10 +27,6 @@ public class AuctionHouseServer extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    // Forward message to auction house when we get a message
-    private void forwardMessageToAuctionHouse(Message message) {
-
     }
     public void run() {
         try {
@@ -40,11 +39,24 @@ public class AuctionHouseServer extends Thread {
         while (!serverSocket.isClosed()) {
             // Try and accept new client connections
             try {
-                serverSocket.accept();
+                Socket agentSocket = serverSocket.accept();
+                AuctionClient client = new AuctionClient(agentSocket, this);
+                clients.add(client);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         System.out.println("Server done running");
     }
+
+    public AuctionClient getClientByKey(int key)
+    {
+        for(AuctionClient client : clients) {
+            if(key == client.getAgentKey()) {
+                return client;
+            }
+        }
+        return null;
+    }
+
 }

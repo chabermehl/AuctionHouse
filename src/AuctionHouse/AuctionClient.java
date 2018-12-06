@@ -72,6 +72,10 @@ public class AuctionClient extends Thread {
         return obj != null ? (Message)obj : null;
     }
 
+    /**
+     * Sends a message to the agent that's connected to this client
+     * @param message to send
+     */
     public void sendMessage(Message message) {
         try {
             oos.writeObject(message);
@@ -80,6 +84,10 @@ public class AuctionClient extends Thread {
         }
     }
 
+    /**
+     * Returns the key of the agent that connected Note: this will be -1 until the agent bids for the first time
+     * @return
+     */
     public int getAgentKey() { return agentKey; }
 
 }

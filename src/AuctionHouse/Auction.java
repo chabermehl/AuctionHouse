@@ -32,6 +32,11 @@ public class Auction extends Thread {
         auctionID = auctionCount++;
     }
 
+    /**
+     * Updates the current bidder for this auction and resets the timer
+     * @param bidderKey key of newest bidder
+     * @param amount amount to set the new bid to
+     */
     public synchronized void setBid(int bidderKey, double amount) {
         // Start the timer if bidding has begun
         beginTime = Instant.now();
@@ -42,6 +47,10 @@ public class Auction extends Thread {
         currentBid = amount;
     }
 
+    /**
+     * Runs the auction loop. Timer counts down after first bid and
+     * terminates afterward.
+     */
     @Override
     public void run() {
         Duration totalElapsed;
@@ -57,9 +66,33 @@ public class Auction extends Thread {
         }
     }
 
+    /**
+     * Gets the current bid on this auction
+     * @return the current bid
+     */
     public double getCurrentBid () {return currentBid;}
+
+    /**
+     * Gets the name of the item being auctioned
+     * @return name of the item being auctioned
+     */
     public String getItemName () {return itemName;}
+
+    /**
+     * Gets the secret key of the current bidder
+     * @return current bidder's key
+     */
     public int getBidderKey() {return currentBidderKey;}
+
+    /**
+     * Gets the minimum bid required for acceptance.
+     * @return minimum bid for the auction
+     */
     public double getMinimumBid() {return minimumBid;}
+
+    /**
+     * Get the description of the item being auctioned
+     * @return
+     */
     public String getDescription() {return description;}
 }

@@ -114,8 +114,7 @@ public class AuctionHouse {
     }
 
     public void auctionDone(Auction auction) {
-        ahServer.getClientByKey(auction.getBidderKey()).sendMessage(new Message("Bid Winner",""));
-        sendMessageToBank(new Message("Transfer Funds", ""));
+        ahServer.getClientByKey(auction.getBidderKey()).sendMessage(new Message("winner",""));
         currentAuctions.remove(auction);
     }
 

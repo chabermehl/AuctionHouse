@@ -50,6 +50,7 @@ public class Auction extends Thread {
                 totalElapsed = Duration.between(beginTime, Instant.now());
                 if(totalElapsed.getSeconds() >= 30) { // 30 seconds
                     System.out.println("Auction for " + itemName + " has finished.");
+                    ahouse.auctionDone(this);
                     return;
                 }
             }

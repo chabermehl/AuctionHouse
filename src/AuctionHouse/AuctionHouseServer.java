@@ -33,9 +33,7 @@ public class AuctionHouseServer extends Thread {
             serverSocket = new ServerSocket(port);
         } catch (IOException e) {
             System.out.println("Problem creating auction house server on port " + port);
-            e.printStackTrace();
         }
-
         while (!serverSocket.isClosed()) {
             // Try and accept new client connections
             try {
@@ -58,5 +56,4 @@ public class AuctionHouseServer extends Thread {
         }
         return null;
     }
-
 }

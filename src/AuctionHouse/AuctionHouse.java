@@ -28,7 +28,7 @@ public class AuctionHouse {
     private AuctionHouseServer ahServer;
 
     public static void main(String[] args) {
-        AuctionHouse auctionHouse = new AuctionHouse(0, "bankIP", 2222);
+        AuctionHouse auctionHouse = new AuctionHouse(0, "localhost", 1234);
         auctionHouse.run();
     }
 
@@ -40,7 +40,7 @@ public class AuctionHouse {
 
     public void run() {
         // Connect to proxy and make an account
-        // connectToBank();
+        connectToBank();
 
         // set up server
         ahServer = new AuctionHouseServer(2222, this);
@@ -51,14 +51,16 @@ public class AuctionHouse {
         while(true) {
             Message message = readMessageFromBank();
             if(message != null) {
+                System.out.println("Received message: " + message.dataInfo + " " + message.data);
                 // Process different messages from the bank
                 if(message.dataInfo.equals("GetAuctions")) {
                     // Send message to bank with the items
                     sendAuctionsToBank();
                 }
-                else if(message.dataInfo.equals("Account Creation")) {
+                else if(message.dataInfo.equals("Bank Key: ")) {
                     // Nab our account number
                     accountNumber = Integer.parseInt(message.data);
+                    System.out.println("Assigned a bank key: " + accountNumber);
                 }
             }
         }
@@ -84,7 +86,7 @@ public class AuctionHouse {
             ois = new ObjectInputStream(bankSocket.getInputStream());
 
             // Create an account with zero balance
-            sendMessageToBank(new Message("InitializeAccount", "AuctionHouse" + houseID + ";0;AuctionHouse"));
+            sendMessageToBank(new Message("Create account", "createAccount;AuctionHouse" + houseID + ";0;AuctionHouse"));
         } catch (IOException e) {
             System.out.println("Error: Could not connect to bank");
             e.printStackTrace();

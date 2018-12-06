@@ -55,6 +55,11 @@ public class AuctionHouse {
                 if(message.dataInfo.equals("GetAuctions"))
                 {
                     // Send message to bank with the items
+                    sendAuctionsToBank();
+                }
+                else if(message.dataInfo.equals("Account Creation"))
+                {
+                    // Nab our account number
                 }
 
             }
@@ -77,7 +82,6 @@ public class AuctionHouse {
     private void connectToBank() {
         // Try to connect to the bank
         try {
-            // Try to connect to bank
             bankSocket = new Socket(bankIP, bankPort);
             oos = new ObjectOutputStream(bankSocket.getOutputStream());
             ois = new ObjectInputStream(bankSocket.getInputStream());
@@ -101,11 +105,7 @@ public class AuctionHouse {
     }
 
     private void sendAuctionsToBank() {
-        try {
-            oos.writeObject(new Message("Auctions", ""));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        sendMessageToBank(new Message("Auctions", ""));
     }
 
     private synchronized void addAuction(Auction auction) {
@@ -152,4 +152,17 @@ public class AuctionHouse {
     public synchronized LinkedList<LinkedList<String>> getItems() {
         return null;
     }
+
+    // Formatted for sending messages
+    public synchronized String getAuctionsList() {
+        String listString = "";
+        StringBuilder sb = new StringBuilder();
+        for(Auction auction : currentAuctions) {
+            sb.append(auction.getItemName() + ";" + auction.getDescription() +
+                    ";" + auction.getMinimumBid() + ";" + auction.getCurrentBid() + ",");
+        }
+        System.out.println(listString);
+        return listString;
+    }
+
 }

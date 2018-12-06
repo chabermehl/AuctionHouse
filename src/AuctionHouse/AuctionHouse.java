@@ -20,8 +20,8 @@ public class AuctionHouse {
     private int bankPort;
     private ObjectOutputStream oos;
     private ObjectInputStream ois;
-    // Use this for creating unique house ids
     private int houseID;
+    private int accountNumber;
 
     // Socket used for talking with the bank
     private Socket bankSocket;
@@ -40,7 +40,8 @@ public class AuctionHouse {
 
     public void run() {
         // Connect to proxy and make an account
-        //connectToBank();
+        // connectToBank();
+
         // set up server
         ahServer = new AuctionHouseServer(2222, this);
         ahServer.start();
@@ -49,27 +50,23 @@ public class AuctionHouse {
         // t1 = record the time
         while(true) {
             Message message = readMessageFromBank();
-            if(message != null)
-            {
+            if(message != null) {
                 // Process different messages from the bank
-                if(message.dataInfo.equals("GetAuctions"))
-                {
+                if(message.dataInfo.equals("GetAuctions")) {
                     // Send message to bank with the items
                     sendAuctionsToBank();
                 }
-                else if(message.dataInfo.equals("Account Creation"))
-                {
+                else if(message.dataInfo.equals("Account Creation")) {
                     // Nab our account number
+                    accountNumber = Integer.parseInt(message.data);
                 }
-
             }
         }
         // wait for a command to terminate
         // closeBankAccount();
     }
 
-    private Message readMessageFromBank()
-    {
+    private Message readMessageFromBank() {
         Object objIn = null;
         try {
             objIn = ois.readObject();
@@ -94,8 +91,7 @@ public class AuctionHouse {
         }
     }
 
-    private void sendMessageToBank(Message message)
-    {
+    private void sendMessageToBank(Message message) {
         try {
             oos.writeObject(message);
         } catch (IOException e) {
@@ -105,7 +101,7 @@ public class AuctionHouse {
     }
 
     private void sendAuctionsToBank() {
-        sendMessageToBank(new Message("Auctions", ""));
+        sendMessageToBank(new Message("Auctions", getAuctionsString()));
     }
 
     private synchronized void addAuction(Auction auction) {
@@ -117,8 +113,7 @@ public class AuctionHouse {
         sendMessageToBank(new Message("Close Account", ""));
     }
 
-    private Auction getAuctionByName(String name)
-    {
+    private Auction getAuctionByName(String name) {
         for(Auction auction : currentAuctions) {
             if(auction.getItemName().equals(name)) {
                 return auction;
@@ -132,8 +127,7 @@ public class AuctionHouse {
         if(auction == null) {return false;}
 
         // Make sure the amount to bid is correct.
-        if(amount >= auction.getCurrentBid() + auction.getMinimumBid())
-        {
+        if(amount >= auction.getCurrentBid() + auction.getMinimumBid()) {
             // Try to freeze funds
             sendMessageToBank(new Message("Freeze Funds", Integer.toString(key) + "," + Double.toString(amount)));
             sendMessageToBank(new Message("Unfreeze Funds", Integer.toString(key) + Double.toString(auction.getCurrentBid())));
@@ -154,7 +148,7 @@ public class AuctionHouse {
     }
 
     // Formatted for sending messages
-    public synchronized String getAuctionsList() {
+    public synchronized String getAuctionsString() {
         String listString = "";
         StringBuilder sb = new StringBuilder();
         for(Auction auction : currentAuctions) {

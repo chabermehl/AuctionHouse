@@ -1,9 +1,8 @@
 package AuctionHouse;
 
 import Bank.Message;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+
+import java.io.*;
 import java.net.Socket;
 import java.util.LinkedList;
 
@@ -39,6 +38,9 @@ public class AuctionHouse {
     }
 
     public void run() {
+        // Read in some auctions
+        readInAuctions();
+
         // Connect to proxy and make an account
         connectToBank();
 
@@ -107,6 +109,8 @@ public class AuctionHouse {
     }
 
     private synchronized void addAuction(Auction auction) {
+        System.out.println("Auction added. Name:" + auction.getItemName() +
+                " Description:" + auction.getDescription() + " Minimum Bid:" + auction.getMinimumBid());
         currentAuctions.add(auction);
         auction.start();
     }
@@ -164,6 +168,26 @@ public class AuctionHouse {
         }
         System.out.println(listString);
         return listString;
+    }
+
+    private void readInAuctions()
+    {
+        try {
+            File file = new File("resources/auctions.txt");
+            FileReader fileReader = new FileReader(file);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            StringBuffer stringBuffer = new StringBuffer();
+            String line;
+            while ((line = bufferedReader.readLine()) != null && !line.isEmpty()) {
+                String[] params = line.split(";");
+                addAuction(new Auction(params[0], params[1], Double.parseDouble(params[2])));
+            }
+            fileReader.close();
+            //System.out.println("Contents of file:");
+            //System.out.println(stringBuffer.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

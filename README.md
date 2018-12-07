@@ -15,24 +15,20 @@ Give details about how to use the program. (Imagine making it easy for someone t
 Our program was made with the console being the primary way to interact with the system. 
 It outputs important information and each compnent takes in string commands.
 
-**java -jar Bank.jar**
-
-**java -jar Agent.jar**
-
-**java -jar Auction_House.jar**
-
 ## Project Assumptions
 This section is where you put any clarifications about your project & how it works concerning any vagueness in the specification documents.
 
-## Versions 
-Where are the .jar files?
-### V1
-explain about how version 1 works
-### V2
-explain about how version 2 works etc...
+### Bank jar
+To run the bank application, run **java -jar Bank.jar**.
+
+### Agent jar
+To run the bank application, run **java -jar Agent.jar**.
+
+### AuctionHouse jar
+To run the bank application, run **java -jar Auction_House.jar**.
 
 ## Docs
-What folder is your documentation (diagram and class diagram) in?
+The documentation PDF is [here.] (AuctionHouseDesign.pdf)
 
 ## Status
 ### Implemented Features
@@ -40,6 +36,3 @@ State things that work.
 
 ### Known Issues
 If there are things that don't work put them here. It will save the graders time and keep them in a good mood.
-
-## Testing and Debugging
-If you have tests, then explain how they work and how to use them.

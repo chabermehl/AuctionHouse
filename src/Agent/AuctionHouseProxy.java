@@ -168,6 +168,7 @@ public class AuctionHouseProxy extends Thread{
      * @return
      */
     public LinkedList<LinkedList<String>> getItems(){
+        System.out.println("here");
         String message = "getItems";
         String returnVal = communicate(message);
         String [] pair = returnVal.split(";");

@@ -55,11 +55,10 @@ public class BankProxy {
      * @param initialBalance
      * @param ip
      * @param port
-     * @param auctionHouse
      * @return
      */
-    public String createAcount(String name,int initialBalance,String ip,String port,boolean auctionHouse){
-        String message = "createAcount;"+name+";"+initialBalance+";"+auctionHouse;
+    public String createAcount(String name,int initialBalance,String ip,String port){
+        String message = "createAccount;"+name+";"+initialBalance+";"+"Agent";
         return communicate(message);
     }
 

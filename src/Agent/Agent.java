@@ -68,7 +68,8 @@ public class Agent{
      */
     public static void main(String []args){
         bankProxy = new BankProxy(args[2],args[3]);
-        String returnedCreatAccount = bankProxy.createAcount(args[0],Integer.parseInt(args[1]),"","",false);
+        String returnedCreatAccount = bankProxy.createAcount(args[0],Integer.parseInt(args[1]),"","");
+        System.out.println(returnedCreatAccount);
         int acountnum = Integer.parseInt(returnedCreatAccount.split("Account Number: ")[1].split("\n")[0]);
         int key = Integer.parseInt(returnedCreatAccount.split("Bid Key: ")[1]);
         Scanner sc = new Scanner(System.in);

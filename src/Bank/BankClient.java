@@ -23,7 +23,7 @@ public class BankClient implements Runnable {
 
     /**
      * bank client constructor that starts the object streams
-     * @param agentSocket
+     * @param agentSocket the socket that is being connected to/from
      * @throws IOException
      */
     public BankClient(Socket agentSocket) throws IOException {
@@ -107,6 +107,7 @@ public class BankClient implements Runnable {
                 //sends the message to the client that is connected
                 this.sendMessage(message);
             }
+        //catching stuff boiiiiiiiiiiiiiiiiiiiiiiiiiii
         } catch (IOException e) {
             System.out.println(agentSocket.getRemoteSocketAddress() + " has disconnected");
         } catch (ClassNotFoundException e) {

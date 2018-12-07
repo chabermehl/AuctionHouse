@@ -84,12 +84,12 @@ public class BankProxy {
         String returnVal = communicate(message);
     }
     public boolean lockBalance(int key,int amount){
-        String message = "lockBalance;"+amount;
+        String message = "freezeFunds;"+amount;
         String returnVal = communicate(message);
         return Boolean.getBoolean(returnVal);
     }
     public void releaseLock(int amount){
-        String message = "releaseLock;"+amount;
+        String message = "unfreezeFunds;"+amount;
         String returnVal = communicate(message);
     }
     public boolean transferMoney(String ip,double amount){
@@ -98,7 +98,7 @@ public class BankProxy {
         return Boolean.getBoolean(returnVal);
     }
     public void closeAcount(int acountNum){
-        String message = "releaseLock;"+acountNum;
+        String message = "closeAcount;"+acountNum;
         String returnVal = communicate(message);
     }
     // format: name,ip,port;...

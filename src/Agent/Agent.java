@@ -60,7 +60,10 @@ public class Agent{
         Scanner sc = new Scanner(System.in);
         String input = sc.nextLine();
         LinkedList<LinkedList<String>> auctionHouses = new LinkedList<>();
-        while (!input.equals("log out")){
+        while (!input.equals("log out") || notificationListenerMap.size()>0){
+            if(input.equals("log out")){
+                System.out.println("You have some bids in progress, so please wait and then exit.");
+            }
             if(input.equals("get auction houses")){
                 auctionHouses =  bankProxy.getAuctionHouses();
                 System.out.println("ID: name");
@@ -133,6 +136,9 @@ public class Agent{
                 auctionHouseProxyMap.get(ip).bid(itemId,amount);
             }
             input=sc.nextLine();
+        }
+        for(AuctionHouseProxy ap: auctionHouseProxyMap.values()){
+            ap.terminate();
         }
         bankProxy.closeAcount(acountnum);
     }

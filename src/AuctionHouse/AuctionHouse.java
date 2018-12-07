@@ -41,17 +41,14 @@ public class AuctionHouse {
     }
 
     public void run() {
-
         // set up server
         ahServer = new AuctionHouseServer(2222, this);
         ahServer.start();
 
         // Connect to proxy and make an account
         connectToBank();
-
         // Read in some auctions
         readInAuctions();
-
         // Set up command input thread
         AuctionCommandInput commandInput = new AuctionCommandInput();
         new Thread(commandInput).start();
@@ -59,7 +56,6 @@ public class AuctionHouse {
         // Set up message receiver
         MessageReceiver receiver = new MessageReceiver(ois);
         new Thread(receiver).start();
-
 
         // The core loop for processing messages
         while(commandInput.getActive()) {
@@ -153,8 +149,6 @@ public class AuctionHouse {
         if(amount >= auction.getCurrentBid() + auction.getMinimumBid()) {
             // Try to freeze funds
             sendMessageToBank(new Message("Freeze Funds", Integer.toString(key) + ";" + Double.toString(amount)));
-            
-
             sendMessageToBank(new Message("Unfreeze Funds", Integer.toString(key) + Double.toString(auction.getCurrentBid())));
 
             // Find the previous bidder by ID, send them a pass notification
@@ -184,8 +178,7 @@ public class AuctionHouse {
         return listString;
     }
 
-    private void readInAuctions()
-    {
+    private void readInAuctions() {
         try {
             File file = new File("resources/auctions.txt");
             FileReader fileReader = new FileReader(file);
@@ -204,5 +197,4 @@ public class AuctionHouse {
     private void shutDown() {
         ahServer.shutdown();
     }
-
 }

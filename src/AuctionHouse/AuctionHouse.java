@@ -57,6 +57,9 @@ public class AuctionHouse {
 
         // Read in some auctions
         readInAuctions();
+
+        getAuctionsString();
+
         // Set up command input thread
         AuctionCommandInput commandInput = new AuctionCommandInput(this);
         new Thread(commandInput).start();
@@ -203,14 +206,12 @@ public class AuctionHouse {
 
     // Formatted for sending messages
     public synchronized String getAuctionsString() {
-        String listString = "";
         StringBuilder sb = new StringBuilder();
         for(Auction auction : currentAuctions) {
             sb.append(auction.getItemName() + "," + auction.getDescription() +
                     "," + auction.getMinimumBid() + "," + auction.getCurrentBid() + ";");
         }
-        System.out.println(listString);
-        return listString;
+        return sb.toString();
     }
 
     private void readInAuctions() {

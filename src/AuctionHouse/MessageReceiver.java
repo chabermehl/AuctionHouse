@@ -20,8 +20,10 @@ public class MessageReceiver implements Runnable {
     public void run() {
         while(active) {
             try {
-                Message message = (Message)inStream.readObject();
-                messageQueue.put(message);
+                if(inStream.available() > 0) {
+                    Message message = (Message) inStream.readObject();
+                    messageQueue.put(message);
+                }
             } catch (IOException | ClassNotFoundException | InterruptedException e) {
                 e.printStackTrace();
             }

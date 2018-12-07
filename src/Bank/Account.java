@@ -7,23 +7,19 @@ package Bank;
 
 /**
  * Account class handles all of the account functionality ie. deposit, withdraw
- * Serialized is implemented as account details could be sent over a connection
  */
 public class Account {
     private String name;
     private int accountNum;
     private double balance;
-    private int bankKey;
+    private int bidKey;
     private double moneyHeld = 0;
-
-    private StringBuilder stringBuilder = new StringBuilder();
-    private StringBuilder auctionStringBuilder = new StringBuilder();
 
     public Account(String name, int accountNum, double balance) {
         this.name = name;
         this.accountNum = accountNum;
         this.balance = balance;
-        this.bankKey = hashCode();
+        this.bidKey = hashCode();
     }
 
     /**
@@ -94,7 +90,7 @@ public class Account {
         log("Account Name: " + this.name);
         log("Account Number: " + this.accountNum);
         log("Balance: " + this.balance);
-        log("Bank Key: " + this.bankKey);
+        log("Bank Key: " + this.bidKey);
     }
 
     /**
@@ -103,8 +99,11 @@ public class Account {
      * @return string representation of the account
      */
     public String getAccountDetails() {
-        String infoString = "";
-        infoString += this.name + ";" + this.accountNum + ";" + this.balance + ";" + this.bankKey;
+        String infoString;
+        infoString = "Account Name: " + this.name + "\n" +
+                "Account Number: " + this.accountNum + "\n" +
+                "Current Balance: " + this.balance + "\n" +
+                "Bid Key: " + this.bidKey;
         return infoString;
     }
 
@@ -114,8 +113,10 @@ public class Account {
      * @return string representation of the auction account
      */
     public String getAuctionAccountDetails() {
-        String infoString = "";
-        infoString += this.name + ";" + this.accountNum + ";" + this.balance;
+        String infoString;
+        infoString = "Account Name: " + this.name + "\n" +
+                "Account Number: " + this.accountNum + "\n" +
+                "Current Balance: " + this.balance + "\n";
         return infoString;
     }
 
@@ -136,8 +137,8 @@ public class Account {
         return this.name;
     }
 
-    public int getBankKey() {
-        return this.bankKey;
+    public int getBidKey() {
+        return this.bidKey;
     }
 
     /**

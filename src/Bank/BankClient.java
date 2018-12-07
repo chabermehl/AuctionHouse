@@ -35,15 +35,15 @@ public class BankClient implements Runnable {
                 if (message.data != null && !message.data.isEmpty()) {
                     String[] inMessage = message.data.split(";");
                     if (message.data.contains("createAccount")) {
-                        if (inMessage.length != 4) {
+                        if (inMessage.length < 4) {
                             message = new Message("Incorrect Input", "Incorrect Input");
                         } else {
-                            Bank.openNewAccount(inMessage[1], Double.parseDouble(inMessage[2]), inMessage[3]);
-                            int accountNumber = Bank.getAccountNumber();
                             if ("Agent".equals(inMessage[3])) {
-                                message = new Message("Account Information: ", Bank.getAccountDetails(accountNumber));
+                                Bank.openNewAccount(inMessage[1], Double.parseDouble(inMessage[2]));
+                                message = new Message("Account Information: ", Bank.getAccountDetails(Bank.getAccountNumber()));
                             } else if ("Auction".equals(inMessage[3])) {
-                                message = new Message("Account Information: ", Bank.getAuctionAccountDetails(accountNumber));
+                                Bank.openNewAuctionAccount(inMessage[1], Double.parseDouble(inMessage[2]), inMessage[4], inMessage[5]);
+                                message = new Message("Account Information: ", Bank.getAuctionAccountDetails(Bank.getAccountNumber()));
                             }
                         }
                     } else if (message.data.contains("Balance")) {

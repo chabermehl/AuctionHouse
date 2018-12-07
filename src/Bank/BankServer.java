@@ -46,9 +46,11 @@ public class BankServer extends Thread {
                         "To create an account, use the command: InitializeAccount;<Name>;<Initial Deposit>;<Type of Account>\n" +
                         "For example: createAccount;Steve;400;Agent\n" +
                         "---------------------------------------------\n" +
-                        "To check your balance, use the command: balance;<bankKey>\n" +
+                        "To check your balance, use the command: balance;<Account Number>\n" +
                         "---------------------------------------------\n" +
-                        "Add something about auctions houses you can choose here.\n"));
+                        "To get the available auction houses, use: getAuctionHouses\n" +
+                        "---------------------------------------------\n" +
+                        "To make a transfer, use: Transfer;<Account Number From>;<Account Number To>;<Amount>"));
                 Thread t = new Thread(bankClient);
                 t.start();
                 clients.add(bankClient);

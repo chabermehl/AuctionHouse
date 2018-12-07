@@ -28,6 +28,7 @@ public class Account {
 
     /**
      * deposits money into the account
+     *
      * @param amount the amount being deposited
      */
     public synchronized void deposit(double amount) {
@@ -37,10 +38,11 @@ public class Account {
 
     /**
      * withdraws money from the account
+     *
      * @param amount the amount being withdrawn
      */
     public synchronized void withdraw(double amount) {
-        if(this.balance >= amount) {
+        if (this.balance >= amount) {
             System.out.println(Thread.currentThread().getName() + " will withdraw " + amount + " from " + this.accountNum);
             try {
                 Thread.sleep(200);
@@ -55,6 +57,7 @@ public class Account {
 
     /**
      * locks the amount of money used after a bid
+     *
      * @param amount amount to be locked after a bid
      */
     public void setAmountLocked(double amount) {
@@ -63,12 +66,13 @@ public class Account {
 
     /**
      * checks if the account has enough funds for the bid
+     *
      * @param amount amount being checked for possible bid
      * @return boolean based on available funds
      */
     public boolean hasFunds(double amount) {
-        double available =  this.balance-moneyHeld;
-        if(available == amount || available > amount) {
+        double available = this.balance - moneyHeld;
+        if (available == amount || available > amount) {
             return true;
         } else {
             return false;
@@ -95,29 +99,50 @@ public class Account {
 
     /**
      * gets the string representation of the account
+     *
      * @return string representation of the account
      */
     public String getAccountDetails() {
         String infoString = "";
-        infoString += this.name+";"+this.accountNum+";"+this.balance+";"+this.bankKey;
+        infoString += this.name + ";" + this.accountNum + ";" + this.balance + ";" + this.bankKey;
         return infoString;
     }
 
+    /**
+     * gets the string representation of the auction account
+     *
+     * @return string representation of the auction account
+     */
     public String getAuctionAccountDetails() {
         String infoString = "";
-        infoString += this.name+";"+this.accountNum+";"+this.balance;
+        infoString += this.name + ";" + this.accountNum + ";" + this.balance;
         return infoString;
     }
 
     /*getters and setters*/
-    public double getBalance() {return this.balance;}
-    public void setbalance(double newBalance) {this.balance = newBalance;}
-    public int getAccountNum() {return this.accountNum;}
-    public String getName() {return this.name;}
-    public int getBankKey() {return this.bankKey;}
+    public double getBalance() {
+        return this.balance;
+    }
+
+    public void setbalance(double newBalance) {
+        this.balance = newBalance;
+    }
+
+    public int getAccountNum() {
+        return this.accountNum;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public int getBankKey() {
+        return this.bankKey;
+    }
 
     /**
      * method for easy printing
+     *
      * @param msg message to be printed
      */
     private void log(String msg) {
@@ -126,6 +151,7 @@ public class Account {
 
     /**
      * overriding hashcode
+     *
      * @return hash value for the bankKey
      */
     @Override

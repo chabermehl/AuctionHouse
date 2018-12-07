@@ -20,19 +20,19 @@ public class Bank {
      * @param accountName    name the account will have
      * @param initialDeposit the initial deposit to be placed in the account
      */
-    public static void openNewAccount(String accountName, double initialDeposit, String accountType) {
-        if ("Agent".equals(accountType)) {
-            int accountNumber = 12348 + accountList.size() + 1;
-            Account newAccount = new Account(accountName, accountNumber, initialDeposit);
-            numberAccount = newAccount.getAccountNum();
-            accountList.put(newAccount.getAccountNum(), newAccount);
-        } else if ("Auction".equals(accountType)) {
-            int accountNumber = 84321 + auctionList.size() + 1;
-            Account newAccount = new Account(accountName, accountNumber, 0);
-            numberAccount = newAccount.getAccountNum();
-            accountList.put(newAccount.getAccountNum(), newAccount);
-            auctionList.put(accountName, "auction info: soon tm");
-        }
+    public static void openNewAccount(String accountName, double initialDeposit) {
+        int accountNumber = 12348 + accountList.size() + 1;
+        Account newAccount = new Account(accountName, accountNumber, initialDeposit);
+        numberAccount = newAccount.getAccountNum();
+        accountList.put(newAccount.getAccountNum(), newAccount);
+    }
+
+    public static void openNewAuctionAccount(String accountName, double initialDeposit, String port, String hostName) {
+        int accountNumber = 84321 + auctionList.size() + 1;
+        Account newAccount = new Account(accountName, accountNumber, initialDeposit);
+        numberAccount = newAccount.getAccountNum();
+        accountList.put(newAccount.getAccountNum(), newAccount);
+        auctionList.put(accountName, "" + accountName + ";" + port + ";" + hostName);
     }
 
     public static int getAccountNumber() {
@@ -80,8 +80,8 @@ public class Bank {
 
     public static String getAuctionString() {
         String auctionString = "";
-        for (String key : auctionList.values()) {
-            auctionString += key;
+        for (String value : auctionList.values()) {
+            auctionString = value + ";";
         }
         return auctionString;
     }

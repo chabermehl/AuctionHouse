@@ -9,10 +9,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Bank {
-    public static Map<Integer, Account> accountList = new HashMap<>();
+    public static Map<Integer, Account> accountNumberList = new HashMap<>();
+    public static Map<Integer, Account> accountBidList = new HashMap<>();
     public static Map<String, String> auctionList = new HashMap<>();
 
     public static int numberAccount;
+    public static int bidKey;
 
     /**
      * opens a new account with the name and initial deposit
@@ -21,17 +23,19 @@ public class Bank {
      * @param initialDeposit the initial deposit to be placed in the account
      */
     public static void openNewAccount(String accountName, double initialDeposit) {
-        int accountNumber = 12348 + accountList.size() + 1;
+        int accountNumber = 12348 + accountNumberList.size() + 1;
         Account newAccount = new Account(accountName, accountNumber, initialDeposit);
         numberAccount = newAccount.getAccountNum();
-        accountList.put(newAccount.getAccountNum(), newAccount);
+        bidKey = newAccount.getBidKey();
+        accountNumberList.put(newAccount.getAccountNum(), newAccount);
+        accountBidList.put(newAccount.getBidKey(), newAccount);
     }
 
     public static void openNewAuctionAccount(String accountName, double initialDeposit, String port, String hostName) {
         int accountNumber = 84321 + auctionList.size() + 1;
         Account newAccount = new Account(accountName, accountNumber, initialDeposit);
         numberAccount = newAccount.getAccountNum();
-        accountList.put(newAccount.getAccountNum(), newAccount);
+        accountNumberList.put(newAccount.getAccountNum(), newAccount);
         auctionList.put(accountName, "" + accountName + ";" + port + ";" + hostName);
     }
 
@@ -39,20 +43,24 @@ public class Bank {
         return numberAccount;
     }
 
+    public static int getBidKey() {
+        return bidKey;
+    }
+
     public static Account getAccount(int accountNumber) {
-        return accountList.get(accountNumber);
+        return accountNumberList.get(accountNumber);
     }
 
     public static synchronized void setAccountHold(int bankKey, double bid) {
-        accountList.get(bankKey).setAmountLocked(bid);
+        accountBidList.get(bankKey).setAmountLocked(bid);
     }
 
     public static synchronized void unlockAccount(int bankKey) {
-        accountList.get(bankKey).resetAccountHolds();
+        accountBidList.get(bankKey).resetAccountHolds();
     }
 
-    public static double getBalance(int bankKey) {
-        Account tempAccount = getAccount(bankKey);
+    public static double getBalance(int accountNumber) {
+        Account tempAccount = getAccount(accountNumber);
         return tempAccount.getBalance();
     }
 
@@ -61,7 +69,7 @@ public class Bank {
     }
 
     public static boolean isValidNumber(int accountNumber) {
-        if (accountList.containsKey(accountNumber)) {
+        if (accountNumberList.containsKey(accountNumber)) {
             return true;
         } else {
             return false;
@@ -87,8 +95,8 @@ public class Bank {
     }
 
     public static void moveMoney(int numberA, int numberB, double amount) {
-        Account A = accountList.get(numberA);
-        Account B = accountList.get(numberB);
+        Account A = accountNumberList.get(numberA);
+        Account B = accountNumberList.get(numberB);
 
         log("-----------------------");
         log("Before Transaction: ");

@@ -35,16 +35,14 @@ public class BankClient implements Runnable {
                 if (message.data != null && !message.data.isEmpty()) {
                     String[] inMessage = message.data.split(";");
                     if (message.data.contains("createAccount")) {
-                        if (inMessage.length < 4) {
-                            message = new Message("Incorrect Input", "Incorrect Input");
+                        if ("Agent".equals(inMessage[3])) {
+                            Bank.openNewAccount(inMessage[1], Double.parseDouble(inMessage[2]));
+                            message = new Message("Account Information: ", Bank.getAccountDetails(Bank.getAccountNumber()));
+                        } else if ("Auction".equals(inMessage[3])) {
+                            Bank.openNewAuctionAccount(inMessage[1], Double.parseDouble(inMessage[2]), inMessage[4], inMessage[5]);
+                            message = new Message("Account Information: ", Bank.getAuctionAccountDetails(Bank.getAccountNumber()));
                         } else {
-                            if ("Agent".equals(inMessage[3])) {
-                                Bank.openNewAccount(inMessage[1], Double.parseDouble(inMessage[2]));
-                                message = new Message("Account Information: ", Bank.getAccountDetails(Bank.getAccountNumber()));
-                            } else if ("Auction".equals(inMessage[3])) {
-                                Bank.openNewAuctionAccount(inMessage[1], Double.parseDouble(inMessage[2]), inMessage[4], inMessage[5]);
-                                message = new Message("Account Information: ", Bank.getAuctionAccountDetails(Bank.getAccountNumber()));
-                            }
+                            message = new Message("Incorrect Input", "Incorrect Input");
                         }
                     } else if (message.data.contains("Balance")) {
                         int accountNumber = Integer.parseInt(inMessage[1]);

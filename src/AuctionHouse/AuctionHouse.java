@@ -50,7 +50,7 @@ public class AuctionHouse {
         // Read in some auctions
         readInAuctions();
         // Set up command input thread
-        AuctionCommandInput commandInput = new AuctionCommandInput();
+        AuctionCommandInput commandInput = new AuctionCommandInput(this);
         new Thread(commandInput).start();
 
         // Set up message receiver
@@ -62,6 +62,7 @@ public class AuctionHouse {
             Message message = receiver.pollNextMessage();
             if(message != null) {
                 System.out.println("Received message: " + message.dataInfo + " " + message.data);
+                String[] params = message.data.split(";");
                 // Process different messages from the bank
                 if(message.dataInfo.equals("GetAuctions")) {
                     // Send message to bank with the items
@@ -83,7 +84,10 @@ public class AuctionHouse {
         System.exit(0);
     }
 
-    private void connectToBank() {
+    /**
+     * Attempts to create a connection with the bank and sends it a createAccountMessage with 0 balance
+     */
+    public boolean connectToBank() {
         // Try to connect to the bank
         try {
             bankSocket = new Socket(bankIP, bankPort);
@@ -92,12 +96,14 @@ public class AuctionHouse {
 
             // Create an account with zero balance
             sendMessageToBank(new Message("Create account", "createAccount;AuctionHouse" +
-                    houseID + ";0;Auction;" + ahServer.getPort() + ";" + Inet4Address.getLocalHost().getHostAddress()));
+                    houseID + ";0;Auction;" + Inet4Address.getLocalHost().getHostAddress() + ";" + ahServer.getPort()));
 
             System.out.println(Inet4Address.getLocalHost().getHostAddress());
+            return true;
         } catch (IOException e) {
             System.out.println("Error: Could not connect to bank");
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -131,7 +137,7 @@ public class AuctionHouse {
      * @param auction
      */
     public void auctionDone(Auction auction) {
-        ahServer.getClientByKey(auction.getBidderKey()).sendMessage(new Message("winner",""));
+        ahServer.getClientByKey(auction.getBidderKey()).sendMessage(new Message("Won bid!","#win;" + auction.getItemName()));
         currentAuctions.remove(auction);
         sendMessageToBank(new Message("auctionList", getAuctionsString()));
     }
@@ -162,13 +168,24 @@ public class AuctionHouse {
             // Try to freeze funds
             sendMessageToBank(new Message("freezeFunds", Integer.toString(key) + ";" + Double.toString(amount)));
 
+            Message msg = null;
+            try {
+                msg = (Message)ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            if(msg.data.contains("not have")) {
+                return false;
+            }
+
             // Unfreeze the last bidder's funds if they exist
             if(auction.hasBeenBiddenOn()) {
                 sendMessageToBank(new Message("unfreezeFunds", Integer.toString(key) + Double.toString(auction.getCurrentBid())));
             }
 
             // Find the previous bidder by ID, send them a pass notification
-            ahServer.getClientByKey(auction.getBidderKey()).sendMessage(new Message("pass", ""));
+            ahServer.getClientByKey(auction.getBidderKey()).sendMessage(new Message("Passed on bid", "#pass;" + auction.getItemName()));
 
             // Update the auction to reset it's timer
             auction.setBid(key, amount);

@@ -10,10 +10,12 @@ import java.io.InputStreamReader;
 public class AuctionCommandInput implements Runnable {
 
     private BufferedReader reader;
-    boolean active = true;
+    private boolean active = true;
+    private AuctionHouse ahouse;
 
-    public AuctionCommandInput() {
+    public AuctionCommandInput(AuctionHouse house) {
         reader = new BufferedReader(new InputStreamReader(System.in));
+        this.ahouse = house;
     }
 
     @Override
@@ -27,6 +29,7 @@ public class AuctionCommandInput implements Runnable {
             }
 
             // Process console input
+            String[] params = command.split(";");
             if(command == null) return;
             switch(command.toUpperCase()) {
                 case "EXIT":
@@ -34,7 +37,8 @@ public class AuctionCommandInput implements Runnable {
                     shutDown();
                     break;
                 case "CONNECTTOBANK":
-                    System.out.println("Fine.");
+                    System.out.println("Connecting to bank...");
+                    boolean connectSuccess = ahouse.connectToBank();
                     break;
                 default:
                     System.out.println("Not sure what you're trying to do here, bud");

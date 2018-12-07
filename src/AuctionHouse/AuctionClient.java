@@ -44,11 +44,10 @@ public class AuctionClient extends Thread {
 
     private void processMessage(Message message) {
         String dataInfo = message.dataInfo;
-
         // Attempt to bid. Send a response back to the agent with results
-        if(dataInfo.equals("Bid")) {
+        if(message.data.contains("bid")) {
             String[] params = message.dataInfo.split(",");
-            if(params.length != 3)
+            if(params.length != 4)
             {
                 // Not the correct parameter amount
                 sendMessage(new Message("Incorrect Bid Input", ""));
@@ -60,9 +59,9 @@ public class AuctionClient extends Thread {
             if(agentKey == -1) {agentKey = key;}
             boolean bidSuccess = ahServer.auctionHouse.bid(key, params[1], Double.parseDouble(params[2]));
             if(bidSuccess) {
-                sendMessage(new Message("accept", ""));
+                sendMessage(new Message("Bid Accepted", "accept;" + params[1]));
             } else {
-                sendMessage(new Message("reject", ""));
+                sendMessage(new Message("Bid Rejected", "reject;" + params[1]));
             }
         }
     }

@@ -52,13 +52,16 @@ public class BankClient implements Runnable {
                             //information to the agent
                             Bank.openNewAccount(inMessage[1], Double.parseDouble(inMessage[2]));
                             message = new Message("Account Information: ", Bank.getAccountDetails(Bank.getAccountNumber()));
+                            log(Bank.getAccountDetails(Bank.getAccountNumber()));
                         } else if ("Auction".equals(inMessage[3])) {
                             //creates a new account and send the account
                             //information to the auction
                             Bank.openNewAuctionAccount(inMessage[1], Double.parseDouble(inMessage[2]), inMessage[4], inMessage[5]);
                             message = new Message("Account Information: ", Bank.getAuctionAccountDetails(Bank.getAccountNumber()));
+                            log(Bank.getAuctionAccountDetails(Bank.getAccountNumber()));
                         } else {
                             message = new Message("Incorrect Input", "Incorrect Input");
+                            log("Incorrect input");
                         }
                     //checks for a message containing Balance
                     } else if (message.data.contains("Balance")) {
@@ -69,8 +72,10 @@ public class BankClient implements Runnable {
                         //sends a message back to the agent containing their account information
                         if (Bank.isValidNumber(accountNumber)) {
                             message = new Message("Info", Bank.getAccountDetails(accountNumber));
+                            log(Bank.getAccountDetails(accountNumber));
                         } else {
                             message = new Message("Error", "Invalid Account Number");
+                            log("Error: Invalid Account Number");
                         }
                     //primarily used by the auction house when a bid has been made
                     //checks if the agent has enough to make a bid then freezes the funds
@@ -82,8 +87,10 @@ public class BankClient implements Runnable {
                         if (Bank.hasEnoughFunds(accountNumber, amount)) {
                             Bank.setAccountHold(accountNumber, amount);
                             checkFlag = " has ";
+                            log("Account Hold Set for: " + amount);
                         } else {
                             checkFlag = " does not have ";
+                            log("Does not have enough funds to lock");
                         }
                         message = new Message("Bank", accountNumber + checkFlag + "enough funds.");
                     //checks if the agent is making a transfer after winning
@@ -96,12 +103,15 @@ public class BankClient implements Runnable {
                     //when the agent needs to know what auction houses are available
                     } else if (message.data.contains("getAuctionHouses")) {
                         message = new Message("Auction Houses", Bank.getAuctionString());
+                        log(Bank.getAuctionString());
                     //unfreezes funds if a bid is passed so that the agent can make a new bid
                     } else if (message.data.contains("unfreezeFunds")) {
                         Bank.unlockAccount(Integer.parseInt(inMessage[0]));
+                        log("Account Funds Unlocked");
                     //rinky dink error message if none of the inputs match
                     } else {
                         message = new Message("Incorrect Input", "Incorrect Input");
+                        log("Incorrect Input");
                     }
                 }
                 //sends the message to the client that is connected

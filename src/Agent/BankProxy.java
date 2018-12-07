@@ -7,6 +7,10 @@ import java.lang.reflect.Array;
 import java.net.Socket;
 import java.util.*;
 
+/**
+ * This class is the bank proxy. This proxy is a client. It connects to the bank
+ * and make functions calls. We use serialization and send and receive the object Message.
+ */
 public class BankProxy {
     //private Socket socket;
     //private PrintWriter out;
@@ -14,6 +18,12 @@ public class BankProxy {
     private Socket socket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
+
+    /**
+     * This is the constructor that creates my proxy via the bank ip and port.
+     * @param ip
+     * @param port
+     */
     public BankProxy(String ip,String port){
         try {
             socket = new Socket(ip, Integer.parseInt(port));
@@ -26,6 +36,10 @@ public class BankProxy {
             System.out.println("Error in bank proxy");
         }
     }
+
+    /**
+     * This function closes the socket and terminates the class.
+     */
     public void terminate(){
         try {
             socket.close();
@@ -34,16 +48,38 @@ public class BankProxy {
             System.out.println("Error in closing bank proxy");
         }
     }
+
+    /**
+     * This function creates a new account in the bank
+     * @param name
+     * @param initialBalance
+     * @param ip
+     * @param port
+     * @param auctionHouse
+     * @return
+     */
     public int createAcount(String name,int initialBalance,String ip,String port,boolean auctionHouse){
         String message = "createAcount;"+name+";"+initialBalance+";"+ip+";"+port+";"+auctionHouse;
         String returnVal = communicate(message);
         return Integer.parseInt(returnVal);
     }
+
+    /**
+     * This function gets the key from the bank.
+     * @param acountNum
+     * @return
+     */
     public int getKey(int acountNum){
         String message = "getKey;"+acountNum;
         String returnVal = communicate(message);
         return Integer.parseInt(returnVal);
     }
+
+    /**
+     * This function sends a message to the bank and then receives the returned value.
+     * @param message
+     * @return
+     */
     private String communicate(String message){
         String dataInfo = "";
         String data = "";
@@ -74,33 +110,73 @@ public class BankProxy {
         }
         return returnedVal;
     }
+
+    /**
+     * This function allows to withdraw from the account.
+     * @param amount
+     * @return
+     */
     public boolean withdraw(int amount){
         String message = "withdraw;"+amount;
         String returnVal = communicate(message);
         return Boolean.getBoolean(returnVal);
     }
+
+    /**
+     * This function allows to deposit some money to the bank.
+     * @param amount
+     */
     public void deposit(int amount){
         String message = "deposit;"+amount;
         String returnVal = communicate(message);
     }
+
+    /**
+     * This function locks the balance in the bank.
+     * @param key
+     * @param amount
+     * @return
+     */
     public boolean lockBalance(int key,int amount){
         String message = "freezeFunds;"+amount;
         String returnVal = communicate(message);
         return Boolean.getBoolean(returnVal);
     }
+
+    /**
+     * This function releases the lock on a certain amount.
+     * @param amount
+     */
     public void releaseLock(int amount){
         String message = "unfreezeFunds;"+amount;
         String returnVal = communicate(message);
     }
+
+    /**
+     * This function transfers the frozen money to the auction house.
+     * @param ip
+     * @param amount
+     * @return
+     */
     public boolean transferMoney(String ip,double amount){
         String message = "transferMoney;"+ip+";"+amount;
         String returnVal = communicate(message);
         return Boolean.getBoolean(returnVal);
     }
+
+    /**
+     * This function closes the account.
+     * @param acountNum
+     */
     public void closeAcount(int acountNum){
         String message = "closeAcount;"+acountNum;
         String returnVal = communicate(message);
     }
+
+    /**
+     * This function gets auction houses and their ip's from the bank.
+     * @return
+     */
     // format: name,ip,port;...
     public LinkedList<LinkedList<String>> getAuctionHouses(){
         String message = "getAuctionHouses";
@@ -115,6 +191,11 @@ public class BankProxy {
         return list;
     }
 
+    /**
+     * This function gets Auction house ip.
+     * @param id
+     * @return
+     */
     public String getAuctionHouseIp(int id){
         String message = "lockBalance;"+id;
         return communicate(message);

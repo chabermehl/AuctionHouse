@@ -7,12 +7,19 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ * This is the agent class and includes all of the logic associated with the agent.
+ */
 public class Agent{
     private static Map<String,NotificationListener> notificationListenerMap = new HashMap<>();
     private static Map<String,AuctionHouseProxy> auctionHouseProxyMap = new HashMap<>();
     private static LinkedList<String> itemIDs = new LinkedList<>();
     private static LinkedList<String> auctionHouseIps;
     private static BankProxy bankProxy;
+
+    /**
+     * This class listens for notifications from the bank regarding the bids.
+     */
     private static class NotificationListener extends Thread{
         private double amount;
         private String id;
@@ -23,11 +30,15 @@ public class Agent{
             this.amount = amount;
             start();
         }
+
+        /**
+         * This thread function waits for new status updates regarding bids,
+         * and takes appropriate action.
+         */
         @Override
         public void run(){
             String notification = "";
             while(!notification.equals("terminate")) {
-                notification = auctionHouseProxy.takeNotification();
                 if(notification.contains("win")){
                     System.out.println("You won the bid on item "+id.split(".")[1]+
                             " in "+id.split(".")[0]+" for "+amount+" dollars");
@@ -46,11 +57,20 @@ public class Agent{
                     //auctionHouseProxyMap.remove(id.split(".")[0]);
                     break;
                 }
+                notification = auctionHouseProxy.takeNotification(id.split(".")[1]);
             }
         }
     }
     /**
-     *
+     * This is my main function which has all of the logic for my agent. It simply waits for
+     * user input. User can use the following commands:
+     * log out: it logs out and terminates the program.
+     * get auction houses: it gets and prints the auction houses.
+     * get auctions from "auction house number": this one gets auctions from the selected auction house.
+     * Note that the number is the number printed when calling get auction houses.
+     * bid on "itemId" for "amount" in "auctionHouse number": This one allows the user to bid on a certain item.
+     * Note that the itemId will be printed via the previous command. The amount is the amount of bid. and the
+     * auction house number is printed when we print auction houses.
      * @param args name amount BankIp BankPort
      */
     public static void main(String []args){
@@ -128,12 +148,17 @@ public class Agent{
                 }
                 if(!auctionHouseProxyMap.keySet().contains(ip)) {
                     auctionHouseProxyMap.put(ip,new AuctionHouseProxy(ip, port));
-                    notificationListenerMap.put(ip,new NotificationListener(auctionHouseProxyMap.get(ip),ip+"."+itemId,amount));
                 }
-                else if(!notificationListenerMap.keySet().contains((ip))){
-                    notificationListenerMap.put(ip,new NotificationListener(auctionHouseProxyMap.get(ip),ip+"."+itemId,amount));
+                boolean status = auctionHouseProxyMap.get(ip).bid(itemId,amount);
+                if (!status){
+                    System.out.println("Bid was rejected");
+                    input=sc.nextLine();
+                    continue;
                 }
-                auctionHouseProxyMap.get(ip).bid(itemId,amount);
+                else{
+                    System.out.println("Bid was accepted");
+                }
+                notificationListenerMap.put(ip,new NotificationListener(auctionHouseProxyMap.get(ip),ip+"."+itemId,amount));
             }
             input=sc.nextLine();
         }
@@ -141,5 +166,6 @@ public class Agent{
             ap.terminate();
         }
         bankProxy.closeAcount(acountnum);
+        bankProxy.terminate();
     }
 }

@@ -5,6 +5,8 @@ import Bank.Message;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.LinkedList;
 
 /**
@@ -16,12 +18,16 @@ public class AuctionHouseServer extends Thread {
     private int port;
     public AuctionHouse auctionHouse;
     private ServerSocket serverSocket;
-    private LinkedList<AuctionClient> clients = new LinkedList<AuctionClient>();
+    private LinkedList<AuctionClient> clients = new LinkedList<>();
 
     public AuctionHouseServer(int port, AuctionHouse ahouse) {
         this.port = port; this.auctionHouse = ahouse;
     }
     public void shutdown() {
+        for(AuctionClient client : clients) {
+            System.out.println("Shutting down client " + client.toString());
+            client.shutDown();
+        }
         try {
             serverSocket.close();
         } catch (IOException e) {
@@ -32,16 +38,18 @@ public class AuctionHouseServer extends Thread {
         try {
             serverSocket = new ServerSocket(port);
         } catch (IOException e) {
-            System.out.println("Problem creating auction house server on port " + port);
+            //e.printStackTrace();
         }
+
+        // Try and accept new client connections
         while (!serverSocket.isClosed()) {
-            // Try and accept new client connections
             try {
                 Socket agentSocket = serverSocket.accept();
                 AuctionClient client = new AuctionClient(agentSocket, this);
                 clients.add(client);
+                new Thread(client).start();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Auction House Server Socket Closed");
             }
         }
         System.out.println("Server done running");
@@ -56,4 +64,6 @@ public class AuctionHouseServer extends Thread {
         }
         return null;
     }
+
+    public int getPort() {return port;}
 }

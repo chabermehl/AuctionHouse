@@ -127,20 +127,12 @@ public class AuctionHouseProxy extends Thread{
     /**
      * This function sends messages to the auction house and then receives the return value,
      * by getting it from the queue.
-     * @param message
+     * @param data
      * @return
      */
-    private String communicate(String message){
+    private String communicate(String data){
         String dataInfo = "";
-        String data = "";
-        if(message.contains(";")){
-            dataInfo = message.split(";")[0];
-            data = message.split(dataInfo+";")[1];
-        }
-        else{
-            dataInfo = message;
-            data = "";
-        }
+
         try {
             out.writeObject(new Message(dataInfo, data));
         }catch (IOException e){
@@ -163,10 +155,13 @@ public class AuctionHouseProxy extends Thread{
      * @param amount
      * @return
      */
-    public boolean bid(String itemId,double amount){
-        String message = "bid;"+itemId+";"+amount;
+    public boolean bid(int key,String itemId,double amount){
+        String message = "bid;"+key+";"+itemId+";"+amount;
         String returnVal = communicate(message);
-        return Boolean.getBoolean(returnVal);
+        if(returnVal.contains("reject")){
+            return false;
+        }
+        return true;
     }
     /**
      * This functions gets and returns the items from the auction house.

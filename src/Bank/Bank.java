@@ -49,7 +49,7 @@ public class Bank {
         Account newAccount = new Account(accountName, accountNumber, initialDeposit);
         numberAccount = newAccount.getAccountNum();
         accountNumberList.put(newAccount.getAccountNum(), newAccount);
-        auctionList.put(accountName, "" + accountName + "," + port + "," + hostName);
+        auctionList.put(accountName, "" + accountName + "," + hostName + "," + port);
     }
 
     /**
@@ -174,7 +174,7 @@ public class Bank {
     public static String getAuctionString() {
         String auctionString = "";
         for (String value : auctionList.values()) {
-            auctionString = value + ";\n";
+            auctionString = value + ";";
         }
         return auctionString;
     }

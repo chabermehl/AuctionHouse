@@ -97,10 +97,11 @@ public class BankClient implements Runnable {
                         //checks if the agent is making a transfer after winning
                         //makes a transfer from one account to the other
                     } else if (message.data.contains("Transfer")) {
-                        int accountNumA = Integer.parseInt(inMessage[1]);
-                        int accountNumB = Integer.parseInt(inMessage[2]);
-                        double amount = Double.parseDouble(inMessage[3]);
+                        int accountNumA = Bank.getAccountNumber();
+                        int accountNumB = Integer.parseInt(inMessage[1]);
+                        double amount = Double.parseDouble(inMessage[2]);
                         Bank.moveMoney(accountNumA, accountNumB, amount);
+                        message = new Message("nothing", "transfer complete");
                         //when the agent needs to know what auction houses are available
                     } else if (message.data.contains("getAuctionHouses")) {
                         message = new Message("Auction Houses", Bank.getAuctionString());

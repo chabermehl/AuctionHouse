@@ -58,39 +58,19 @@ public class BankProxy {
      * @param auctionHouse
      * @return
      */
-    public int createAcount(String name,int initialBalance,String ip,String port,boolean auctionHouse){
-        String message = "createAcount;"+name+";"+initialBalance+";"+ip+";"+port+";"+auctionHouse;
-        String returnVal = communicate(message);
-        return Integer.parseInt(returnVal);
+    public String createAcount(String name,int initialBalance,String ip,String port,boolean auctionHouse){
+        String message = "createAcount;"+name+";"+initialBalance+";"+auctionHouse;
+        return communicate(message);
     }
 
-    /**
-     * This function gets the key from the bank.
-     * @param acountNum
-     * @return
-     */
-    public int getKey(int acountNum){
-        String message = "getKey;"+acountNum;
-        String returnVal = communicate(message);
-        return Integer.parseInt(returnVal);
-    }
 
     /**
      * This function sends a message to the bank and then receives the returned value.
-     * @param message
+     * @param data
      * @return
      */
-    private String communicate(String message){
+    private String communicate(String data){
         String dataInfo = "";
-        String data = "";
-        if(!message.contains(";")){
-            dataInfo = message;
-            data = "";
-        }
-        else{
-            dataInfo = message.split(";")[0];
-            data = message.split(dataInfo+";")[1];
-        }
         try {
             out.writeObject(new Message(dataInfo, data));
         }catch (IOException e){
@@ -158,18 +138,17 @@ public class BankProxy {
      * @param amount
      * @return
      */
-    public boolean transferMoney(String ip,double amount){
-        String message = "transferMoney;"+ip+";"+amount;
+    public void transferMoney(String ip,double amount){
+        String message = "Transfer;"+ip+";"+amount;
         String returnVal = communicate(message);
-        return Boolean.getBoolean(returnVal);
     }
 
     /**
      * This function closes the account.
      * @param acountNum
      */
-    public void closeAcount(int acountNum){
-        String message = "closeAcount;"+acountNum;
+    public void closeAccount(int acountNum){
+        String message = "closeAccount;"+acountNum;
         String returnVal = communicate(message);
     }
 
@@ -197,7 +176,7 @@ public class BankProxy {
      * @return
      */
     public String getAuctionHouseIp(int id){
-        String message = "lockBalance;"+id;
+        String message = "getAuctionHouseIp;"+id;
         return communicate(message);
     }
 }

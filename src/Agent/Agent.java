@@ -42,13 +42,8 @@ public class Agent{
                 if(notification.contains("win")){
                     System.out.println("You won the bid on item "+id.split(".")[1]+
                             " in "+id.split(".")[0]+" for "+amount+" dollars");
-                    boolean returnVal = bankProxy.transferMoney(id.split(".")[0],amount);
-                    if (returnVal) {
-                        System.out.println("Money was successfully transferred");
-                    }
-                    else {
-                        System.out.println("There is an error in money transfer");
-                    }
+                    bankProxy.transferMoney(id.split(".")[0],amount);
+                    System.out.println("Money was successfully transferred");
                 }
                 else if(notification.contains("pass")){
                     System.out.println("You lost the bid");
@@ -75,8 +70,9 @@ public class Agent{
      */
     public static void main(String []args){
         bankProxy = new BankProxy(args[2],args[3]);
-        int acountnum = bankProxy.createAcount(args[0],Integer.getInteger(args[1]),"","",false);
-        int key = bankProxy.getKey(acountnum);
+        String returnedCreatAccount = bankProxy.createAcount(args[0],Integer.parseInt(args[1]),"","",false);
+        int acountnum = Integer.parseInt(returnedCreatAccount.split("Account Number: ")[1].split("\n")[0]);
+        int key = Integer.parseInt(returnedCreatAccount.split("Bid Key: ")[1]);
         Scanner sc = new Scanner(System.in);
         String input = sc.nextLine();
         LinkedList<LinkedList<String>> auctionHouses = new LinkedList<>();
@@ -115,7 +111,7 @@ public class Agent{
                 int num = 1;
                 for (LinkedList<String> list: items){
                     System.out.println("num. houseId, itemId, description, minimumBid, currentBid");
-                    System.out.print(num+". ");
+                    System.out.print(num+". "+id+", ");
                     for(String s: list){
                         System.out.print(s+", ");
                     }
@@ -149,7 +145,7 @@ public class Agent{
                 if(!auctionHouseProxyMap.keySet().contains(ip)) {
                     auctionHouseProxyMap.put(ip,new AuctionHouseProxy(ip, port));
                 }
-                boolean status = auctionHouseProxyMap.get(ip).bid(itemId,amount);
+                boolean status = auctionHouseProxyMap.get(ip).bid(key,itemId,amount);
                 if (!status){
                     System.out.println("Bid was rejected");
                     input=sc.nextLine();
@@ -165,7 +161,7 @@ public class Agent{
         for(AuctionHouseProxy ap: auctionHouseProxyMap.values()){
             ap.terminate();
         }
-        bankProxy.closeAcount(acountnum);
+        bankProxy.closeAccount(acountnum);
         bankProxy.terminate();
     }
 }

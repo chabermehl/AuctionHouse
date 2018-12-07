@@ -26,6 +26,7 @@ public class AuctionCommandInput implements Runnable {
                 e.printStackTrace();
             }
 
+            // Process console input
             if(command == null) return;
             switch(command.toUpperCase()) {
                 case "EXIT":
@@ -42,10 +43,17 @@ public class AuctionCommandInput implements Runnable {
         }
     }
 
+    /**
+     * Stop looping and waiting for messages
+     */
     public void shutDown() {
         active = false;
     }
 
+    /**
+     * Is this thing running?
+     * @return whether or not this is running
+     */
     public boolean getActive() {
         return active;
     }

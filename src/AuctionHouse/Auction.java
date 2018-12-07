@@ -101,4 +101,10 @@ public class Auction extends Thread {
      * @return auction ID.
      */
     public long getAuctionID() {return auctionID;}
+
+    /**
+     * Returns whether or not an initial bid has been placed on the auction
+     * @return whether or not that auction
+     */
+    public boolean hasBeenBiddenOn() {return hasBeenBiddedOn;}
 }

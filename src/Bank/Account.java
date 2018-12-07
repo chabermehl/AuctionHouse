@@ -17,6 +17,7 @@ public class Account {
     private double moneyHeld = 0;
 
     private StringBuilder stringBuilder = new StringBuilder();
+    private StringBuilder auctionStringBuilder = new StringBuilder();
 
     public Account(String name, int accountNum, double balance) {
         this.name = name;
@@ -101,9 +102,16 @@ public class Account {
         stringBuilder.append("Account Name: " + this.name + "\n");
         stringBuilder.append("Account Number: " + this.accountNum + "\n");
         stringBuilder.append("Balance: " + this.balance + "\n");
-        stringBuilder.append("Bank Key: " + this.bankKey + "\n");
+        stringBuilder.append("Auction Key: " + this.bankKey + "\n");
         return stringBuilder.toString();
+    }
 
+    public String getAuctionAccountDetails() {
+        auctionStringBuilder.append("----------------------------------" + "\n");
+        auctionStringBuilder.append("Account Name: " + this.name + "\n");
+        auctionStringBuilder.append("Account Number: " + this.accountNum + "\n");
+        auctionStringBuilder.append("Balance: " + this.balance + "\n");
+        return auctionStringBuilder.toString();
     }
 
     /*getters and setters*/

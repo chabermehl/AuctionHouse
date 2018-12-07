@@ -10,9 +10,9 @@ import java.util.Map;
 
 public class Bank {
     public static Map<Integer, Account> accountList = new HashMap<>();
-    public static Map<String, Account> auctionList = new HashMap<>();
+    public static Map<String, String> auctionList = new HashMap<>();
 
-    public static int bankKey;
+    public static int numberAccount;
 
     /**
      * opens a new account with the name and initial deposit
@@ -24,23 +24,23 @@ public class Bank {
         if ("Agent".equals(accountType)) {
             int accountNumber = 12348 + accountList.size() + 1;
             Account newAccount = new Account(accountName, accountNumber, initialDeposit);
-            bankKey = newAccount.getBankKey();
-            accountList.put(bankKey, newAccount);
+            numberAccount = newAccount.getAccountNum();
+            accountList.put(newAccount.getAccountNum(), newAccount);
         } else if ("Auction".equals(accountType)) {
             int accountNumber = 84321 + auctionList.size() + 1;
             Account newAccount = new Account(accountName, accountNumber, 0);
-            bankKey = newAccount.getBankKey();
-            accountList.put(bankKey, newAccount);
-            auctionList.put(accountName, newAccount);
+            numberAccount = newAccount.getAccountNum();
+            accountList.put(newAccount.getAccountNum(), newAccount);
+            auctionList.put(accountName, "auction info: soon tm");
         }
     }
 
-    public static int getBankKey() {
-        return bankKey;
+    public static int getAccountNumber() {
+        return numberAccount;
     }
 
-    public static Account getAccount(int bankKey) {
-        return accountList.get(bankKey);
+    public static Account getAccount(int accountNumber) {
+        return accountList.get(accountNumber);
     }
 
     public static synchronized void setAccountHold(int bankKey, double bid) {
@@ -60,8 +60,8 @@ public class Bank {
         return getAccount(bankKey).hasFunds(bid);
     }
 
-    public static boolean isValidKey(int bankKey) {
-        if (accountList.containsKey(bankKey)) {
+    public static boolean isValidNumber(int accountNumber) {
+        if (accountList.containsKey(accountNumber)) {
             return true;
         } else {
             return false;
@@ -73,9 +73,22 @@ public class Bank {
         return tempAccount.getAccountDetails();
     }
 
-    public static void moveMoney(int keyA, int keyB, double amount) {
-        Account A = accountList.get(keyA);
-        Account B = accountList.get(keyB);
+    public static String getAuctionAccountDetails(int numberAccount) {
+        Account auctionAccount = getAccount(numberAccount);
+        return auctionAccount.getAuctionAccountDetails();
+    }
+
+    public static String getAuctionString() {
+        String auctionString = "";
+        for (String key : auctionList.values()) {
+            auctionString += key;
+        }
+        return auctionString;
+    }
+
+    public static void moveMoney(int numberA, int numberB, double amount) {
+        Account A = accountList.get(numberA);
+        Account B = accountList.get(numberB);
 
         log("-----------------------");
         log("Before Transaction: ");

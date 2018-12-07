@@ -39,35 +39,39 @@ public class BankClient implements Runnable {
                             message = new Message("Incorrect Input", "Incorrect Input");
                         } else {
                             Bank.openNewAccount(inMessage[1], Double.parseDouble(inMessage[2]), inMessage[3]);
-                            String bankKey = Integer.toString(Bank.getBankKey());
-                            message = new Message("Bank Key: ", bankKey);
+                            int accountNumber = Bank.getAccountNumber();
+                            if ("Agent".equals(inMessage[3])) {
+                                message = new Message("Account Information: ", Bank.getAccountDetails(accountNumber));
+                            } else if ("Auction".equals(inMessage[3])) {
+                                message = new Message("Account Information: ", Bank.getAuctionAccountDetails(accountNumber));
+                            }
                         }
                     } else if (message.data.contains("Balance")) {
-                        int bankKey = Integer.parseInt(inMessage[1]);
-                        log("" + bankKey);
-                        if (Bank.isValidKey(bankKey)) {
-                            message = new Message("Info", Bank.getAccountDetails(bankKey));
+                        int accountNumber = Integer.parseInt(inMessage[1]);
+                        log("" + accountNumber);
+                        if (Bank.isValidNumber(accountNumber)) {
+                            message = new Message("Info", Bank.getAccountDetails(accountNumber));
                         } else {
                             message = new Message("Error", "Invalid Bank Key");
                         }
                     } else if (message.data.contains("Has Funds")) {
-                        int bankKey = Integer.parseInt(inMessage[1]);
+                        int accountNumber = Integer.parseInt(inMessage[1]);
                         double amount = Double.parseDouble(inMessage[2]);
                         String checkFlag;
-                        if (Bank.hasEnoughFunds(bankKey, amount)) {
-                            Bank.setAccountHold(bankKey, amount);
+                        if (Bank.hasEnoughFunds(accountNumber, amount)) {
+                            Bank.setAccountHold(accountNumber, amount);
                             checkFlag = " has ";
                         } else {
                             checkFlag = " does not have ";
                         }
-                        message = new Message("Bank", bankKey + checkFlag + "enough funds.");
+                        message = new Message("Bank", accountNumber + checkFlag + "enough funds.");
                     } else if (message.data.contains("Transfer")) {
-                        int bankKeyA = Integer.parseInt(inMessage[1]);
-                        int bankKeyB = Integer.parseInt(inMessage[2]);
+                        int accountNumA = Integer.parseInt(inMessage[1]);
+                        int accountNumB = Integer.parseInt(inMessage[2]);
                         double amount = Double.parseDouble(inMessage[3]);
-                        Bank.moveMoney(bankKeyA, bankKeyB, amount);
+                        Bank.moveMoney(accountNumA, accountNumB, amount);
                     } else if (message.data.contains("getAuctionHouses")) {
-
+                        message = new Message("Auction Houses", Bank.getAuctionString());
                     }
                 }
                 this.sendMessage(message);

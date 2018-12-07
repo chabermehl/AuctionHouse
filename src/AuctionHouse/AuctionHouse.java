@@ -148,8 +148,12 @@ public class AuctionHouse {
         // Make sure the amount to bid is correct.
         if(amount >= auction.getCurrentBid() + auction.getMinimumBid()) {
             // Try to freeze funds
-            sendMessageToBank(new Message("Freeze Funds", Integer.toString(key) + ";" + Double.toString(amount)));
-            sendMessageToBank(new Message("Unfreeze Funds", Integer.toString(key) + Double.toString(auction.getCurrentBid())));
+            sendMessageToBank(new Message("freezeFunds", Integer.toString(key) + ";" + Double.toString(amount)));
+
+            // Unfreeze the last bidder's funds if they exist
+            if(auction.hasBeenBiddenOn()) {
+                sendMessageToBank(new Message("unfreezeFunds", Integer.toString(key) + Double.toString(auction.getCurrentBid())));
+            }
 
             // Find the previous bidder by ID, send them a pass notification
             ahServer.getClientByKey(auction.getBidderKey()).sendMessage(new Message("pass", ""));

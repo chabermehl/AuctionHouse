@@ -95,4 +95,10 @@ public class Auction extends Thread {
      * @return
      */
     public String getDescription() {return description;}
+
+    /**
+     * Get the auctionID
+     * @return auction ID.
+     */
+    public long getAuctionID() {return auctionID;}
 }

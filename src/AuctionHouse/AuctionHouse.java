@@ -122,10 +122,14 @@ public class AuctionHouse {
         sendMessageToBank(new Message("auctionList", getAuctionsString()));
     }
 
-    public void closeBankAccount() {
+    private void closeBankAccount() {
         sendMessageToBank(new Message("Close Account", "closeAccount;" + accountNumber));
     }
 
+    /**
+     * Used for removing finished bids. Sends a win message to whoever won the bid.
+     * @param auction
+     */
     public void auctionDone(Auction auction) {
         ahServer.getClientByKey(auction.getBidderKey()).sendMessage(new Message("winner",""));
         currentAuctions.remove(auction);
@@ -141,6 +145,14 @@ public class AuctionHouse {
         return null;
     }
 
+    /**
+     * Attempts to bid on an auction with the given key of the bidder and
+     * the amount they want to bid.
+     * @param key of the bidder
+     * @param name of the item to bid on
+     * @param amount amount to bid
+     * @return
+     */
     public synchronized boolean bid(int key, String name, double amount) {
         Auction auction = getAuctionByName(name);
         if(auction == null) {return false;}
@@ -165,13 +177,8 @@ public class AuctionHouse {
         return false;
     }
 
-    // item format is: (house id, item id, description, minimum bid, current bid)
-    public synchronized LinkedList<LinkedList<String>> getItems() {
-        return null;
-    }
-
     // Formatted for sending messages
-    public synchronized String getAuctionsString() {
+    private synchronized String getAuctionsString() {
         String listString = "";
         StringBuilder sb = new StringBuilder();
         for(Auction auction : currentAuctions) {

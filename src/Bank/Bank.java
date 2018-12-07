@@ -8,6 +8,10 @@ package Bank;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * this class handles all of the bank functions from creation of accounts to holding
+ * a list of auction houses for the agents
+ */
 public class Bank {
     private static Map<Integer, Account> accountNumberList = new HashMap<>();
     private static Map<Integer, Account> accountBidList = new HashMap<>();

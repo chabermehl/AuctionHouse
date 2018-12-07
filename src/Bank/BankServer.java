@@ -13,11 +13,14 @@ import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * this class does all the work of handling incoming connections
+ */
 public class BankServer extends Thread {
 
-    public int portNumber;
-    public List<BankClient> clients = new LinkedList<>();
-    public ServerSocket serverSocket;
+    private int portNumber;
+    private List<BankClient> clients = new LinkedList<>();
+    private ServerSocket serverSocket;
 
     public BankServer(int portNumber) throws IOException {
         this.portNumber = portNumber;

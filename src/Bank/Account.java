@@ -7,7 +7,6 @@ package Bank;
 
 /**
  * Account class handles all of the account functionality ie. deposit, withdraw
- * Serialized is implemented as account details could be sent over a connection
  */
 public class Account {
     private String name;

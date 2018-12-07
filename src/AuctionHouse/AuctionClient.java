@@ -64,6 +64,9 @@ public class AuctionClient extends Thread {
                 sendMessage(new Message("Bid Rejected", "reject;" + params[1]));
             }
         }
+        else if(message.data.contains("getItems")) {
+            sendMessage(new Message("Items:", ahServer.auctionHouse.getAuctionsString()));
+        }
     }
 
     /**

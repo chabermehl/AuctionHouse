@@ -202,7 +202,7 @@ public class AuctionHouse {
     }
 
     // Formatted for sending messages
-    private synchronized String getAuctionsString() {
+    public synchronized String getAuctionsString() {
         String listString = "";
         StringBuilder sb = new StringBuilder();
         for(Auction auction : currentAuctions) {

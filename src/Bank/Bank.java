@@ -70,6 +70,10 @@ public class Bank {
         return bidKey;
     }
 
+    public static void closeAccount(int accountNumber) {
+        accountNumberList.remove(accountNumber);
+    }
+
     /**
      * gets an account from the account map
      *

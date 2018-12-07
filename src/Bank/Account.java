@@ -98,20 +98,15 @@ public class Account {
      * @return string representation of the account
      */
     public String getAccountDetails() {
-        stringBuilder.append("----------------------------------" + "\n");
-        stringBuilder.append("Account Name: " + this.name + "\n");
-        stringBuilder.append("Account Number: " + this.accountNum + "\n");
-        stringBuilder.append("Balance: " + this.balance + "\n");
-        stringBuilder.append("Auction Key: " + this.bankKey + "\n");
-        return stringBuilder.toString();
+        String infoString = "";
+        infoString += this.name+";"+this.accountNum+";"+this.balance+";"+this.bankKey;
+        return infoString;
     }
 
     public String getAuctionAccountDetails() {
-        auctionStringBuilder.append("----------------------------------" + "\n");
-        auctionStringBuilder.append("Account Name: " + this.name + "\n");
-        auctionStringBuilder.append("Account Number: " + this.accountNum + "\n");
-        auctionStringBuilder.append("Balance: " + this.balance + "\n");
-        return auctionStringBuilder.toString();
+        String infoString = "";
+        infoString += this.name+";"+this.accountNum+";"+this.balance;
+        return infoString;
     }
 
     /*getters and setters*/

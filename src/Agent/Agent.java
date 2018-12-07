@@ -81,6 +81,7 @@ public class Agent{
             }
             if(input.equals("get auction houses")){
                 auctionHouses =  bankProxy.getAuctionHouses();
+                //System.out.println(auctionHouses.get(0));
                 System.out.println("ID: name");
                 int num=0;
                 for(LinkedList list: auctionHouses){
@@ -95,8 +96,8 @@ public class Agent{
                 String port;
                 try {
                     id = Integer.parseInt(str[1]);
-                    ip = auctionHouses.get(id).get(1);
-                    port = auctionHouses.get(id).get(2);
+                    ip = auctionHouses.get(id).get(2);
+                    port = auctionHouses.get(id).get(1);
                 }
                 catch (Exception e){
                     System.out.println("ERROR: incorrect auction house ID, try again");

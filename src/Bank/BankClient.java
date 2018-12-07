@@ -23,6 +23,7 @@ public class BankClient implements Runnable {
 
     /**
      * bank client constructor that starts the object streams
+     *
      * @param agentSocket the socket that is being connected to/from
      * @throws IOException
      */
@@ -63,7 +64,7 @@ public class BankClient implements Runnable {
                             message = new Message("Incorrect Input", "Incorrect Input");
                             log("Incorrect input");
                         }
-                    //checks for a message containing Balance
+                        //checks for a message containing Balance
                     } else if (message.data.contains("Balance")) {
                         //grabs the account number that comes in with the balance message
                         int accountNumber = Integer.parseInt(inMessage[1]);
@@ -77,9 +78,9 @@ public class BankClient implements Runnable {
                             message = new Message("Error", "Invalid Account Number");
                             log("Error: Invalid Account Number");
                         }
-                    //primarily used by the auction house when a bid has been made
-                    //checks if the agent has enough to make a bid then freezes the funds
-                    //returns a message one way or the other
+                        //primarily used by the auction house when a bid has been made
+                        //checks if the agent has enough to make a bid then freezes the funds
+                        //returns a message one way or the other
                     } else if (message.data.contains("freezeFunds")) {
                         int accountNumber = Integer.parseInt(inMessage[1]);
                         double amount = Double.parseDouble(inMessage[2]);
@@ -93,26 +94,26 @@ public class BankClient implements Runnable {
                             log("Does not have enough funds to lock");
                         }
                         message = new Message("Bank", accountNumber + checkFlag + "enough funds.");
-                    //checks if the agent is making a transfer after winning
-                    //makes a transfer from one account to the other
+                        //checks if the agent is making a transfer after winning
+                        //makes a transfer from one account to the other
                     } else if (message.data.contains("Transfer")) {
                         int accountNumA = Integer.parseInt(inMessage[1]);
                         int accountNumB = Integer.parseInt(inMessage[2]);
                         double amount = Double.parseDouble(inMessage[3]);
                         Bank.moveMoney(accountNumA, accountNumB, amount);
-                    //when the agent needs to know what auction houses are available
+                        //when the agent needs to know what auction houses are available
                     } else if (message.data.contains("getAuctionHouses")) {
                         message = new Message("Auction Houses", Bank.getAuctionString());
                         log(Bank.getAuctionString());
-                    //unfreezes funds if a bid is passed so that the agent can make a new bid
+                        //unfreezes funds if a bid is passed so that the agent can make a new bid
                     } else if (message.data.contains("unfreezeFunds")) {
                         Bank.unlockAccount(Integer.parseInt(inMessage[0]));
                         log("Account Funds Unlocked");
-                    //closes account when prompted to
+                        //closes account when prompted to
                     } else if (message.data.contains("closeAccount")) {
                         Bank.closeAccount(Integer.parseInt(inMessage[1]));
                         log("Account Closed: " + inMessage[1]);
-                    //rinky dink error message if none of the inputs match
+                        //rinky dink error message if none of the inputs match
                     } else {
                         message = new Message("Incorrect Input", "Incorrect Input");
                         log("Incorrect Input");
@@ -121,7 +122,7 @@ public class BankClient implements Runnable {
                 //sends the message to the client that is connected
                 this.sendMessage(message);
             }
-        //catching stuff boiiiiiiiiiiiiiiiiiiiiiiiiiii
+            //catching stuff boiiiiiiiiiiiiiiiiiiiiiiiiiii
         } catch (IOException e) {
             System.out.println(agentSocket.getRemoteSocketAddress() + " has disconnected");
         } catch (ClassNotFoundException e) {
@@ -131,6 +132,7 @@ public class BankClient implements Runnable {
 
     /**
      * sends a message object back to the connected client
+     *
      * @param message message object containing a string
      * @throws IOException
      */
@@ -140,6 +142,7 @@ public class BankClient implements Runnable {
 
     /**
      * im lazy
+     *
      * @param msg string value to be printed
      */
     private void log(String msg) {

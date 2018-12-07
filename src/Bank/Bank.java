@@ -72,6 +72,7 @@ public class Bank {
 
     /**
      * closes an account by removing it from the account list
+     *
      * @param accountNumber which account to close
      */
     public static void closeAccount(int accountNumber) {

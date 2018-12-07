@@ -5,6 +5,7 @@ import Bank.Message;
 import java.io.*;
 import java.net.Inet4Address;
 import java.net.Socket;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -30,23 +31,30 @@ public class AuctionHouse {
     private AuctionHouseServer ahServer;
 
     public static void main(String[] args) {
-        AuctionHouse auctionHouse = new AuctionHouse(0, "localhost", 1234);
+        if(args.length != 4) {
+            System.out.println("Invalid number of args: expected 4.\n" +
+                    "Required args: houseID, auctionServerPort, bankIp, bankport");
+            return;
+        }
+
+        AuctionHouse auctionHouse = new AuctionHouse(Integer.parseInt(args[0]), Integer.parseInt(args[1]), args[2], Integer.parseInt(args[3]));
         auctionHouse.run();
     }
 
-    public AuctionHouse(int houseID, String bankIP, int bankPort) {
+    public AuctionHouse(int houseID, int serverPort, String bankIP, int bankPort) {
         this.bankIP = bankIP;
         this.bankPort = bankPort;
         this.houseID = houseID;
+        ahServer = new AuctionHouseServer(serverPort, this);
     }
 
     public void run() {
         // set up server
-        ahServer = new AuctionHouseServer(2222, this);
         ahServer.start();
 
         // Connect to proxy and make an account
-        connectToBank();
+        boolean connectSuccess = connectToBank();
+
         // Read in some auctions
         readInAuctions();
         // Set up command input thread
@@ -58,7 +66,7 @@ public class AuctionHouse {
         new Thread(receiver).start();
 
         // The core loop for processing messages
-        while(commandInput.getActive()) {
+        while(commandInput.getActive() && connectSuccess && currentAuctions.size() > 0) {
             Message message = receiver.pollNextMessage();
             if(message != null) {
                 System.out.println("Received message: " + message.dataInfo + " " + message.data);
@@ -102,7 +110,6 @@ public class AuctionHouse {
             return true;
         } catch (IOException e) {
             System.out.println("Error: Could not connect to bank");
-            e.printStackTrace();
             return false;
         }
     }
@@ -208,8 +215,13 @@ public class AuctionHouse {
 
     private void readInAuctions() {
         try {
-            File file = new File("resources/auctions.txt");
-            FileReader fileReader = new FileReader(file);
+
+            InputStream file = getClass().getClassLoader().getResourceAsStream("auctions.txt");
+            InputStreamReader fileReader = new InputStreamReader(file);
+
+            //URL resource = AuctionHouse.class.getResource("auctions.text");
+            //File file = new File("resources/auctions.txt");
+            //FileReader fileReader = new FileReader(resource.toString());
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line;
             while ((line = bufferedReader.readLine()) != null && !line.isEmpty()) {

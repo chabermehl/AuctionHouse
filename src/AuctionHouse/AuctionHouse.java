@@ -158,7 +158,7 @@ public class AuctionHouse {
             // Find the previous bidder by ID, send them a pass notification
             ahServer.getClientByKey(auction.getBidderKey()).sendMessage(new Message("pass", ""));
 
-            // Update that auction to reset it's timer
+            // Update the auction to reset it's timer
             auction.setBid(key, amount);
             return true;
         }

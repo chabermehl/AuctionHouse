@@ -50,9 +50,9 @@ public class BankClient implements Runnable {
                         if (Bank.isValidNumber(accountNumber)) {
                             message = new Message("Info", Bank.getAccountDetails(accountNumber));
                         } else {
-                            message = new Message("Error", "Invalid Bank Key");
+                            message = new Message("Error", "Invalid Account Number");
                         }
-                    } else if (message.data.contains("Has Funds")) {
+                    } else if (message.data.contains("freezeFunds")) {
                         int accountNumber = Integer.parseInt(inMessage[1]);
                         double amount = Double.parseDouble(inMessage[2]);
                         String checkFlag;
@@ -70,6 +70,10 @@ public class BankClient implements Runnable {
                         Bank.moveMoney(accountNumA, accountNumB, amount);
                     } else if (message.data.contains("getAuctionHouses")) {
                         message = new Message("Auction Houses", Bank.getAuctionString());
+                    } else if (message.data.contains("unfreezeFunds")) {
+                        Bank.unlockAccount(Integer.parseInt(inMessage[0]));
+                    } else {
+                        message = new Message("Incorrect Input", "Incorrect Input");
                     }
                 }
                 this.sendMessage(message);

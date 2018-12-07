@@ -70,6 +70,10 @@ public class Bank {
         return bidKey;
     }
 
+    /**
+     * closes an account by removing it from the account list
+     * @param accountNumber which account to close
+     */
     public static void closeAccount(int accountNumber) {
         accountNumberList.remove(accountNumber);
     }

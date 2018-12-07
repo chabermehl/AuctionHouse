@@ -108,10 +108,11 @@ public class BankClient implements Runnable {
                     } else if (message.data.contains("unfreezeFunds")) {
                         Bank.unlockAccount(Integer.parseInt(inMessage[0]));
                         log("Account Funds Unlocked");
-                        //rinky dink error message if none of the inputs match
+                    //closes account when prompted to
                     } else if (message.data.contains("closeAccount")) {
                         Bank.closeAccount(Integer.parseInt(inMessage[1]));
                         log("Account Closed: " + inMessage[1]);
+                    //rinky dink error message if none of the inputs match
                     } else {
                         message = new Message("Incorrect Input", "Incorrect Input");
                         log("Incorrect Input");

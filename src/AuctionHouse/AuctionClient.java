@@ -44,6 +44,11 @@ public class AuctionClient extends Thread {
             System.out.println("Shutting down client");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
+            try {
+                ois.close();
+            } catch (IOException e1) {
+                //e1.printStackTrace();
+            }
         }
     }
 
@@ -64,11 +69,11 @@ public class AuctionClient extends Thread {
         System.out.println(dataInfo);
         // Attempt to bid. Send a response back to the agent with results
         if(message.data.contains("bid")) {
-            String[] params = message.dataInfo.split(",");
+            String[] params = message.dataInfo.split(";");
             if(params.length != 4)
             {
                 // Not the correct parameter amount
-                sendMessage(new Message("Incorrect Bid Input", ""));
+                sendMessage(new Message("Incorrect Bid Input", "Incorrect Bid Input"));
                 return;
             }
 

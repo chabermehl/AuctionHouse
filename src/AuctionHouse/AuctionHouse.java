@@ -5,9 +5,7 @@ import Bank.Message;
 import java.io.*;
 import java.net.Inet4Address;
 import java.net.Socket;
-import java.net.URL;
 import java.util.LinkedList;
-import java.util.Set;
 
 /**
  * The auction house has
@@ -65,12 +63,12 @@ public class AuctionHouse {
         new Thread(commandInput).start();
 
         // Set up message receiver
-        MessageReceiver receiver = new MessageReceiver(ois);
-        new Thread(receiver).start();
+        //MessageReceiver receiver = new MessageReceiver(ois);
+        //new Thread(receiver).start();
 
         // The core loop for processing messages
         while(commandInput.getActive() && connectSuccess && currentAuctions.size() > 0) {
-            Message message = receiver.pollNextMessage();
+            Message message = readMessageFromBank();
             if(message != null) {
                 System.out.println("Received message: " + message.dataInfo + " " + message.data);
                 String[] params = message.data.split(";");
@@ -89,10 +87,22 @@ public class AuctionHouse {
 
         // wait for a command to terminate
         closeBankAccount();
-        receiver.shutDown();
+        //receiver.shutDown();
         shutDown();
         System.out.println("Shutdown Complete");
         System.exit(0);
+    }
+
+    private Message readMessageFromBank() {
+        try {
+            Object obj = ois.readObject();
+            if(obj != null) {
+                return (Message)obj;
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**

@@ -44,6 +44,7 @@ public class AuctionClient extends Thread {
 
     private void processMessage(Message message) {
         String dataInfo = message.dataInfo;
+        System.out.println(dataInfo);
         // Attempt to bid. Send a response back to the agent with results
         if(message.data.contains("bid")) {
             String[] params = message.dataInfo.split(",");

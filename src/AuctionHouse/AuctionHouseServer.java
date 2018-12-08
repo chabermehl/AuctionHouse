@@ -26,7 +26,6 @@ public class AuctionHouseServer extends Thread {
     public void shutdown() {
         for(AuctionClient client : clients) {
             System.out.println("Shutting down client " + client.toString());
-            client.shutDown();
         }
         try {
             serverSocket.close();

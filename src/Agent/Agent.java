@@ -38,9 +38,9 @@ public class Agent{
             String notification = "";
             while(!notification.equals("terminate")) {
                 if(notification.contains("win")){
-                    System.out.println("You won the bid on item "+id.split(".")[1]+
-                            " in "+id.split(".")[0]+" for "+amount+" dollars");
-                    bankProxy.transferMoney(id.split(".")[0],amount);
+                    System.out.println("You won the bid on item "+id.split("/")[1]+
+                            " in "+id.split("/")[0]+" for "+amount+" dollars");
+                    bankProxy.transferMoney(id.split("/")[0],amount);
                     System.out.println("Money was successfully transferred");
                 }
                 else if(notification.contains("pass")){
@@ -51,7 +51,7 @@ public class Agent{
                     notificationListenerMap.remove(id);
                     break;
                 }
-                notification = auctionHouseProxy.takeNotification(id.split(".")[1]);
+                notification = auctionHouseProxy.takeNotification(id.split("/")[1]);
             }
         }
     }
@@ -155,7 +155,7 @@ public class Agent{
                 else{
                     System.out.println("Bid was accepted");
                 }
-                notificationListenerMap.put(ip,new NotificationListener(auctionHouseProxyMap.get(ip),ip+"."+itemId,amount));
+                notificationListenerMap.put(ip,new NotificationListener(auctionHouseProxyMap.get(ip),ip+"/"+itemId,amount));
             }
             input=sc.nextLine();
         }

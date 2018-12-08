@@ -43,7 +43,7 @@ public class AuctionHouseServer extends Thread {
         while (!serverSocket.isClosed()) {
             try {
                 Socket agentSocket = serverSocket.accept();
-                System.out.println(agentSocket.getRemoteSocketAddress() + "connect to Auction House Server");
+                System.out.println(agentSocket.getRemoteSocketAddress() + " connected to Auction House Server");
                 AuctionClient client = new AuctionClient(agentSocket, this);
                 clients.add(client);
                 new Thread(client).start();

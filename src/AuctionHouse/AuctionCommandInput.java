@@ -36,10 +36,6 @@ public class AuctionCommandInput implements Runnable {
                     System.out.println("Shutting Down...");
                     shutDown();
                     break;
-                case "CONNECTTOBANK":
-                    System.out.println("Connecting to bank...");
-                    boolean connectSuccess = ahouse.connectToBank();
-                    break;
                 default:
                     System.out.println("Not sure what you're trying to do here, bud");
                     break;

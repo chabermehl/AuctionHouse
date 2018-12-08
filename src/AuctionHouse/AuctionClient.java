@@ -46,6 +46,7 @@ public class AuctionClient extends Thread {
     private Message readMessage() {
         try {
             Message obj = (Message)ois.readObject();
+            ois.reset();
             if (obj != null) {
                 return obj;
             }

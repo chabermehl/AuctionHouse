@@ -89,6 +89,8 @@ public class Bank {
         return accountNumberList.get(accountNumber);
     }
 
+    private static Account getAccountWithBidKey(int bidKey) {return accountBidList.get(bidKey);}
+
     /**
      * sets a hold on an account after a bid is made
      *
@@ -127,7 +129,8 @@ public class Bank {
      * @return boolean stating whether or not theres enough cash
      */
     public static boolean hasEnoughFunds(int bidKey, double bid) {
-        return getAccount(bidKey).hasFunds(bid);
+        System.out.println(bidKey);
+        return getAccountWithBidKey(bidKey).hasFunds(bid);
     }
 
     /**

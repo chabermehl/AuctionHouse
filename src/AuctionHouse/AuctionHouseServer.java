@@ -14,7 +14,6 @@ import java.util.LinkedList;
  * Forwards messages to the actual auction house
  */
 public class AuctionHouseServer extends Thread {
-
     private int port;
     public AuctionHouse auctionHouse;
     private ServerSocket serverSocket;
@@ -44,6 +43,7 @@ public class AuctionHouseServer extends Thread {
         while (!serverSocket.isClosed()) {
             try {
                 Socket agentSocket = serverSocket.accept();
+                System.out.println(agentSocket.getRemoteSocketAddress() + "connect to Auction House Server");
                 AuctionClient client = new AuctionClient(agentSocket, this);
                 clients.add(client);
                 new Thread(client).start();

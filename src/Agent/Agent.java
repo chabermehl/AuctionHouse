@@ -48,6 +48,7 @@ public class Agent{
                 }
                 if(notification.contains("win") || notification.contains("pass")){
                     //auctionHouseProxyMap.remove(id.split(".")[0]);
+                    notificationListenerMap.remove(id);
                     break;
                 }
                 notification = auctionHouseProxy.takeNotification(id.split(".")[1]);
@@ -134,8 +135,8 @@ public class Agent{
                     itemId = str[1].split(" ")[0];
                     amount = Double.parseDouble(str2[1].split(" ")[0]);
                     auctionHouse = str3[1];
-                    ip = auctionHouses.get(Integer.parseInt(auctionHouse)).get(1);
-                    port = auctionHouses.get(Integer.parseInt(auctionHouse)).get(2);
+                    ip = auctionHouses.get(Integer.parseInt(auctionHouse)).get(2);
+                    port = auctionHouses.get(Integer.parseInt(auctionHouse)).get(1);
                 }
                 catch (Exception e){
                     System.out.println("ERROR: incorrect bidding format, try again");

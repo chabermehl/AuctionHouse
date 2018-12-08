@@ -31,9 +31,8 @@ public class AuctionClient extends Thread {
     public void run() {
         //receiver = new MessageReceiver(ois);
         //new Thread(receiver).start();
-
         try {
-            while(!socket.isClosed()) {
+            while(true) {
                 // Process messages from agent
                 // Message message = receiver.pollNextMessage();
                 Message message = (Message)ois.readObject();
@@ -41,14 +40,8 @@ public class AuctionClient extends Thread {
                     processMessage(message);
                 }
             }
-            System.out.println("Shutting down client");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            try {
-                ois.close();
-            } catch (IOException e1) {
-                //e1.printStackTrace();
-            }
         }
     }
 
@@ -66,10 +59,10 @@ public class AuctionClient extends Thread {
 
     private void processMessage(Message message) {
         String dataInfo = message.dataInfo;
-        System.out.println(dataInfo);
+        System.out.println("AFEIUFHSEIUFHUIFISUEHFISUEHFISUEHFIUSEFHISUEHFIUSEHFIUSEHFIUSEHFISUEHF");
         // Attempt to bid. Send a response back to the agent with results
         if(message.data.contains("bid")) {
-            String[] params = message.dataInfo.split(";");
+            String[] params = message.data.split(";");
             if(params.length != 4)
             {
                 // Not the correct parameter amount
@@ -77,17 +70,20 @@ public class AuctionClient extends Thread {
                 return;
             }
 
-            int key = Integer.parseInt(params[0]);
+            int key = Integer.parseInt(params[1]);
             // Set our key if the agent hasn't bid yet.
             if(agentKey == -1) {agentKey = key;}
-            boolean bidSuccess = ahServer.auctionHouse.bid(key, params[1], Double.parseDouble(params[2]));
+            boolean bidSuccess = ahServer.auctionHouse.bid(key, params[2], Double.parseDouble(params[3]));
             if(bidSuccess) {
+                System.out.println("Bid success");
                 sendMessage(new Message("Bid Accepted", "accept;" + params[1]));
             } else {
+                System.out.println("Bid fail");
                 sendMessage(new Message("Bid Rejected", "reject;" + params[1]));
             }
         }
         else if(message.data.contains("getItems")) {
+
             sendMessage(new Message("Items:", ahServer.auctionHouse.getAuctionsString()));
         }
     }

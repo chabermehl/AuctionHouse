@@ -87,9 +87,9 @@ public class AuctionHouse {
 
     private Message readMessageFromBank() {
         try {
-            Object obj = ois.readObject();
+            Message obj = (Message)ois.readObject();
             if(obj != null) {
-                return (Message)obj;
+                return obj;
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -161,29 +161,33 @@ public class AuctionHouse {
      * Attempts to bid on an auction with the given key of the bidder and
      * the amount they want to bid.
      * @param key of the bidder
-     * @param name of the item to bid on
+     * @param id of the item to bid on
      * @param amount amount to bid
      * @return
      */
-    public synchronized boolean bid(int key, String name, double amount) {
-        Auction auction = getAuctionByName(name);
+    public synchronized boolean bid(int key, String id, double amount) {
+        System.out.println(id);
+        Auction auction = getAuctionByID(Integer.parseInt(id));
         if(auction == null) {return false;}
+
+        System.out.println("Trying to bid with $" + amount + " on " + auction.getItemName() + " with min bid " + auction.getMinimumBid());
 
         // Make sure the amount to bid is correct.
         if(amount >= auction.getCurrentBid() + auction.getMinimumBid()) {
+
             // Try to freeze funds
             sendMessageToBank(new Message("freezeFunds", Integer.toString(key) + ";" + Double.toString(amount)));
 
-            Message msg = null;
-            try {
-                msg = (Message)ois.readObject();
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            if(msg.data.contains("not have")) {
-                return false;
-            }
+//            Message msg = null;
+//            try {
+//                msg = (Message)ois.readObject();
+//            } catch (IOException | ClassNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//
+//            if(msg.data.contains("not have")) {
+//                return false;
+//            }
 
             // Unfreeze the last bidder's funds if they exist
             if(auction.hasBeenBiddenOn()) {
@@ -229,6 +233,15 @@ public class AuctionHouse {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private Auction getAuctionByID(int id) {
+        for(Auction auction : currentAuctions) {
+            if(auction.getAuctionID() == id) {
+                return auction;
+            }
+        }
+        return null;
     }
 
     private void shutDown() {

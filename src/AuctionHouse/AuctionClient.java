@@ -32,15 +32,19 @@ public class AuctionClient extends Thread {
         //receiver = new MessageReceiver(ois);
         //new Thread(receiver).start();
 
-        while(!socket.isClosed()) {
-            // Process messages from agent
-            // Message message = receiver.pollNextMessage();
-            Message message = readMessage();
-            if(message != null) {
-                processMessage(message);
+        try {
+            while(!socket.isClosed()) {
+                // Process messages from agent
+                // Message message = receiver.pollNextMessage();
+                Message message = (Message)ois.readObject();
+                if(message != null) {
+                    processMessage(message);
+                }
             }
+            System.out.println("Shutting down client");
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
-        System.out.println("Shutting down client");
     }
 
     private Message readMessage() {

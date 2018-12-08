@@ -18,15 +18,16 @@ It outputs important information and each compnent takes in string commands.
 ## Project Assumptions
 This section is where you put any clarifications about your project & how it works concerning any vagueness in the specification documents.
 
-### Bank jar
+## Jar Files
+#### Bank jar
 To run the Bank application, run **java -jar Bank.jar**. 
 - **NOTE:** The jar file doesn't seem to work from terminal, but it can be run via double-clicking. This means 
 that console output isn't visible.
 
-### Agent jar
+#### Agent jar
 To run the Agent application, run **java -jar Agent.jar**.
 
-### AuctionHouse jar
+#### AuctionHouse jar
 To run the AuctionHouse application, run **java -jar AuctionHouse.jar**.
 
 ## Docs

@@ -14,7 +14,7 @@ public class AuctionClient extends Thread {
     private ObjectOutputStream oos;
     private ObjectInputStream ois;
     private int agentKey = -1;
-    private MessageReceiver receiver;
+    //private MessageReceiver receiver;
 
     // Output and input from messages
     public AuctionClient(Socket socket, AuctionHouseServer server) {
@@ -29,17 +29,30 @@ public class AuctionClient extends Thread {
     }
 
     public void run() {
-        receiver = new MessageReceiver(ois);
-        new Thread(receiver).start();
+        //receiver = new MessageReceiver(ois);
+        //new Thread(receiver).start();
 
-        while(receiver.getActive()) {
+        while(!socket.isClosed()) {
             // Process messages from agent
-            Message message = receiver.pollNextMessage();
+            // Message message = receiver.pollNextMessage();
+            Message message = readMessage();
             if(message != null) {
                 processMessage(message);
             }
         }
         System.out.println("Shutting down client");
+    }
+
+    private Message readMessage() {
+        try {
+            Object obj = ois.readObject();
+            if (obj != null) {
+                return (Message)obj;
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private void processMessage(Message message) {
@@ -87,9 +100,4 @@ public class AuctionClient extends Thread {
      * @return
      */
     public int getAgentKey() { return agentKey; }
-
-    public void shutDown() {
-        receiver.shutDown();
-    }
-
 }

@@ -46,6 +46,7 @@ public class BankClient implements Runnable {
                     String[] inMessage = message.data.split(";");
                     //checking if we are creating an account
                     if (message.data.contains("createAccount")) {
+                        System.out.println(message.data);
                         //check for agent or auction account then opens a new
                         //account for either one
                         if ("Agent".equals(inMessage[3])) {
@@ -61,6 +62,7 @@ public class BankClient implements Runnable {
                             message = new Message("Account Information: ", Bank.getAuctionAccountDetails(Bank.getAccountNumber()));
                             log(Bank.getAuctionAccountDetails(Bank.getAccountNumber()));
                         } else {
+                            System.out.println(message.data);
                             message = new Message("Incorrect Input", "Incorrect Input");
                             log("Incorrect input");
                         }

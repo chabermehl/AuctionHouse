@@ -73,11 +73,7 @@ public class AuctionHouse {
                 System.out.println("Received message: " + message.dataInfo + " " + message.data);
                 String[] params = message.data.split(";");
                 // Process different messages from the bank
-                if(message.dataInfo.equals("GetAuctions")) {
-                    // Send message to bank with the items
-                    sendAuctionsToBank();
-                }
-                else if(message.dataInfo.equals("Bank Key: ")) {
+                if(message.dataInfo.equals("Bank Key: ")) {
                     // Nab our account number
                     accountNumber = Integer.parseInt(message.data);
                     System.out.println("Assigned a bank key: " + accountNumber);
@@ -136,16 +132,11 @@ public class AuctionHouse {
         }
     }
 
-    private void sendAuctionsToBank() {
-        sendMessageToBank(new Message("Auctions", getAuctionsString()));
-    }
-
     private synchronized void addAuction(Auction auction) {
         System.out.println("Auction added. Name:" + auction.getItemName() +
                 " Description:" + auction.getDescription() + " Minimum Bid:" + auction.getMinimumBid());
         currentAuctions.add(auction);
         auction.start();
-        sendMessageToBank(new Message("auctionList", getAuctionsString()));
     }
 
     private void closeBankAccount() {
@@ -159,7 +150,6 @@ public class AuctionHouse {
     public void auctionDone(Auction auction) {
         ahServer.getClientByKey(auction.getBidderKey()).sendMessage(new Message("Won bid!","#win;" + auction.getItemName()));
         currentAuctions.remove(auction);
-        sendMessageToBank(new Message("auctionList", getAuctionsString()));
     }
 
     private Auction getAuctionByName(String name) {

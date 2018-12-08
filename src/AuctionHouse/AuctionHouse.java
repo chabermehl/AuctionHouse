@@ -62,10 +62,6 @@ public class AuctionHouse {
         AuctionCommandInput commandInput = new AuctionCommandInput(this);
         new Thread(commandInput).start();
 
-        // Set up message receiver
-        //MessageReceiver receiver = new MessageReceiver(ois);
-        //new Thread(receiver).start();
-
         // The core loop for processing messages
         while(commandInput.getActive() && connectSuccess && currentAuctions.size() > 0) {
             Message message = readMessageFromBank();

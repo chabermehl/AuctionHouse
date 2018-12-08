@@ -45,9 +45,9 @@ public class AuctionClient extends Thread {
 
     private Message readMessage() {
         try {
-            Object obj = ois.readObject();
+            Message obj = (Message)ois.readObject();
             if (obj != null) {
-                return (Message)obj;
+                return obj;
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

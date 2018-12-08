@@ -19,20 +19,25 @@ It outputs important information and each compnent takes in string commands.
 This section is where you put any clarifications about your project & how it works concerning any vagueness in the specification documents.
 
 ### Bank jar
-To run the bank application, run **java -jar Bank.jar**.
+To run the Bank application, run **java -jar Bank.jar**. 
+- **NOTE:** The jar file doesn't seem to work from terminal, but it can be run via double-clicking. This means 
+that console output isn't visible.
 
 ### Agent jar
-To run the bank application, run **java -jar Agent.jar**.
+To run the Agent application, run **java -jar Agent.jar**.
 
 ### AuctionHouse jar
-To run the bank application, run **java -jar Auction_House.jar**.
+To run the AuctionHouse application, run **java -jar AuctionHouse.jar**.
 
 ## Docs
 The documentation PDF is [here.] (AuctionHouseDesign.pdf)
 
 ## Status
 ### Implemented Features
-State things that work.
+Basic messaging seems to be working. AuctionHouse and connect to bank, and so can Agent. Agent can communicate with 
+auction house.
 
 ### Known Issues
-If there are things that don't work put them here. It will save the graders time and keep them in a good mood.
+Running the Bank app from the terminal doesn't seem to work. It does work when run by double-clicking, however.
+After Agent makes a bid on an item, it doesn't seem to be able to communicate with the auction house any longer.
+Auction House doesn't check if bidder has enough funds to bid before trying to freeze money.

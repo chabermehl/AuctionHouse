@@ -11,7 +11,8 @@ import java.util.LinkedList;
 
 /**
  * Auction House server class used as a sort of proxy, I guess.
- * Forwards messages to the actual auction house
+ * Forwards messages to the actual auction house, and holds a collection
+ * of clients.
  */
 public class AuctionHouseServer extends Thread {
     private int port;

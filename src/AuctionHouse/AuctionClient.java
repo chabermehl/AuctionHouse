@@ -6,6 +6,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+/**
+ * The AuctionClient class holds a socket that an agent is connected to.
+ * It receives messages from agents and processing them accordingly
+ */
 public class AuctionClient extends Thread {
 
     // Agent socket that we'll be talking to
@@ -27,6 +31,10 @@ public class AuctionClient extends Thread {
         }
     }
 
+    /**
+     * Runs the thread, which waits for messages from
+     * the agent and processes them accordingly
+     */
     public void run() {
         try {
             while(true) {
@@ -42,18 +50,10 @@ public class AuctionClient extends Thread {
         }
     }
 
-    private Message readMessage() {
-        try {
-            Message obj = (Message)ois.readObject();
-            if (obj != null) {
-                return obj;
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
+    /**
+     * Processes messages that are received from agent
+     * @param message to process
+     */
     private void processMessage(Message message) {
         System.out.println("Auction Client received message: " + message.dataInfo + " " + message.data);
         // Attempt to bid. Send a response back to the agent with results

@@ -8,7 +8,8 @@ import java.net.Socket;
 import java.util.LinkedList;
 
 /**
- * The auction house has
+ * The main Auction House class that holds the server for clients to connect to.
+ * Holds onto it's own socket for talking to the bank
  */
 public class AuctionHouse {
 

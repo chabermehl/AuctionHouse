@@ -7,6 +7,7 @@ import java.time.Instant;
  * Should only be used by the auction house
  * stores all data related to an auction
  * Runs on its own thread
+ * Holds all the data related to an auction
  */
 public class Auction extends Thread {
 

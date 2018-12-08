@@ -56,6 +56,7 @@ public class AuctionHouseServer extends Thread {
 
     public AuctionClient getClientByKey(int key) {
         for(AuctionClient client : clients) {
+            System.out.println(client.getAgentKey());
             if(key == client.getAgentKey()) {
                 return client;
             }

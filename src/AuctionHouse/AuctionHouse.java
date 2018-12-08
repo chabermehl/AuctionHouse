@@ -176,7 +176,7 @@ public class AuctionHouse {
         if(amount >= auction.getCurrentBid() + auction.getMinimumBid()) {
 
             // Try to freeze funds
-            sendMessageToBank(new Message("freezeFunds", Integer.toString(key) + ";" + Double.toString(amount)));
+            sendMessageToBank(new Message("freezeFunds", "freezeFunds;" + Integer.toString(key) + ";" + Double.toString(amount)));
 
 //            Message msg = null;
 //            try {
@@ -191,11 +191,10 @@ public class AuctionHouse {
 
             // Unfreeze the last bidder's funds if they exist
             if(auction.hasBeenBiddenOn()) {
-                sendMessageToBank(new Message("unfreezeFunds", Integer.toString(key) + Double.toString(auction.getCurrentBid())));
+                sendMessageToBank(new Message("unfreezeFunds", "unfreezeFunds;" + Integer.toString(key) + ";" + Double.toString(auction.getCurrentBid())));
+                // Find the previous bidder by ID, send them a pass notification
+                ahServer.getClientByKey(auction.getBidderKey()).sendMessage(new Message("Passed on bid", "#pass;" + auction.getItemName()));
             }
-
-            // Find the previous bidder by ID, send them a pass notification
-            ahServer.getClientByKey(auction.getBidderKey()).sendMessage(new Message("Passed on bid", "#pass;" + auction.getItemName()));
 
             // Update the auction to reset it's timer
             auction.setBid(key, amount);
@@ -227,7 +226,7 @@ public class AuctionHouse {
             String line;
             while ((line = bufferedReader.readLine()) != null && !line.isEmpty()) {
                 String[] params = line.split(";");
-                addAuction(new Auction(params[0], params[1], Double.parseDouble(params[2])));
+                addAuction(new Auction(params[0], params[1], Double.parseDouble(params[2]), this));
             }
             fileReader.close();
         } catch (IOException e) {

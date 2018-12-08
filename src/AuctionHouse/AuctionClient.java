@@ -14,7 +14,6 @@ public class AuctionClient extends Thread {
     private ObjectOutputStream oos;
     private ObjectInputStream ois;
     private int agentKey = -1;
-    //private MessageReceiver receiver;
 
     // Output and input from messages
     public AuctionClient(Socket socket, AuctionHouseServer server) {
@@ -29,8 +28,6 @@ public class AuctionClient extends Thread {
     }
 
     public void run() {
-        //receiver = new MessageReceiver(ois);
-        //new Thread(receiver).start();
         try {
             while(true) {
                 // Process messages from agent
@@ -58,13 +55,11 @@ public class AuctionClient extends Thread {
     }
 
     private void processMessage(Message message) {
-        String dataInfo = message.dataInfo;
-        System.out.println("AFEIUFHSEIUFHUIFISUEHFISUEHFISUEHFIUSEFHISUEHFIUSEHFIUSEHFIUSEHFISUEHF");
+        System.out.println("Auction Client received message: " + message.dataInfo + " " + message.data);
         // Attempt to bid. Send a response back to the agent with results
         if(message.data.contains("bid")) {
             String[] params = message.data.split(";");
-            if(params.length != 4)
-            {
+            if(params.length != 4) {
                 // Not the correct parameter amount
                 sendMessage(new Message("Incorrect Bid Input", "Incorrect Bid Input"));
                 return;
@@ -98,6 +93,7 @@ public class AuctionClient extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("sent message successfully");
     }
 
     /**

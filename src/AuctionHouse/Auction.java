@@ -24,10 +24,11 @@ public class Auction extends Thread {
     private long auctionID;
 
 
-    public Auction(String itemName, String description, double minimumBid) {
+    public Auction(String itemName, String description, double minimumBid, AuctionHouse ahouse) {
         this.itemName = itemName;
         this.description = description;
         this.minimumBid = minimumBid;
+        this.ahouse = ahouse;
 
         auctionID = auctionCount++;
     }

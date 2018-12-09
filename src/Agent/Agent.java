@@ -40,9 +40,10 @@ public class Agent{
             String notification = "";
             while(!notification.equals("terminate")) {
                 if(notification.contains("win")){
-                    System.out.println("You won the bid on item "+id.split("/")[1]+
-                            " in "+id.split("/")[0]+" for "+amount+" dollars");
-                    bankProxy.transferMoney(id.split("/")[0],amount);
+                    System.out.println("You won the bid on item "+
+                                    id.split("/")[1]+
+                            " in "+id.split("/")[0]+"/"+id.split("/")[2]+" for "+amount+" dollars");
+                    bankProxy.transferMoney(id.split("/")[0]+"/"+id.split("/")[2],amount);
                     auctionHouseProxy.sendReceipt();
                     System.out.println("Money was successfully transferred");
                 }
@@ -108,10 +109,10 @@ public class Agent{
                     input=sc.nextLine();
                     continue;
                 }
-                if(!auctionHouseProxyMap.keySet().contains(ip) || auctionHouseProxyMap.get(ip).isTerminated()) {
-                    auctionHouseProxyMap.put(ip,new AuctionHouseProxy(ip, port));
+                if(!auctionHouseProxyMap.keySet().contains(ip+"/"+port) || auctionHouseProxyMap.get(ip+"/"+port).isTerminated()) {
+                    auctionHouseProxyMap.put(ip+"/"+port,new AuctionHouseProxy(ip, port));
                 }
-                items =  auctionHouseProxyMap.get(ip).getItems();
+                items =  auctionHouseProxyMap.get(ip+"/"+port).getItems();
                 int num = 0;
                 for (LinkedList<String> list: items){
                     System.out.println("num. houseId, itemId, description, minimumBid, currentBid");
@@ -147,10 +148,10 @@ public class Agent{
                     input=sc.nextLine();
                     continue;
                 }
-                if(!auctionHouseProxyMap.keySet().contains(ip) || auctionHouseProxyMap.get(ip).isTerminated()) {
-                    auctionHouseProxyMap.put(ip,new AuctionHouseProxy(ip, port));
+                if(!auctionHouseProxyMap.keySet().contains(ip+"/"+port) || auctionHouseProxyMap.get(ip+"/"+port).isTerminated()) {
+                    auctionHouseProxyMap.put(ip+"/"+port,new AuctionHouseProxy(ip, port));
                 }
-                boolean status = auctionHouseProxyMap.get(ip).bid(key,itemId,amount);
+                boolean status = auctionHouseProxyMap.get(ip+"/"+port).bid(key,itemId,amount);
                 if (!status){
                     System.out.println("Bid was rejected");
                     input=sc.nextLine();
@@ -159,7 +160,8 @@ public class Agent{
                 else{
                     System.out.println("Bid was accepted");
                 }
-                notificationListenerMap.put(ip+"/"+itemId,new NotificationListener(auctionHouseProxyMap.get(ip),ip+"/"+itemId,amount));
+                notificationListenerMap.put(ip+"/"+itemId+"/"+port,new NotificationListener(
+                        auctionHouseProxyMap.get(ip+"/"+port),ip+"/"+itemId+"/"+port,amount));
             }
             input=sc.nextLine();
         }

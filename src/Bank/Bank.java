@@ -55,7 +55,7 @@ public class Bank {
         Account newAccount = new Account(accountName, accountNumber, initialDeposit);
         numberAccount = newAccount.getAccountNum();
         accountNumberList.put(newAccount.getAccountNum(), newAccount);
-        ipList.put(port,accountNumber);
+        ipList.put(port+"/"+hostName,accountNumber);
         auctionList.put(accountNumber, "" + accountName + "," + hostName + "," + port);
     }
 

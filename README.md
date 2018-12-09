@@ -36,13 +36,13 @@ all of the bids are gone and all the receipts are received. Meanwhile, no one ca
 unavailable.
 
 ### Bank jar
-To run the bank application, run **java -jar Bank.jar**.
+To run the bank application, run **java -jar Bank-group10.jar**.
 
 ### Agent jar
-To run the bank application, run **java -jar Agent.jar**.
+To run the bank application, run **java -jar Agent-group10.jar**.
 
 ### AuctionHouse jar
-To run the bank application, run **java -jar Auction_House.jar**.
+To run the bank application, run **java -jar AuctionHouse-group10.jar**.
 
 ## Docs
 The documentation PDF is [here.] (AuctionHouseDesign.pdf)

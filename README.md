@@ -37,10 +37,10 @@ unavailable.
 
 ### Bank jar
 To run the bank application, run **java -jar Bank-group10.jar**.
-
+note: Bank-group10-old.jar is old version, don't use it.
 ### Agent jar
 To run the bank application, run **java -jar Agent-group10.jar**.
-
+note: Agent-group10-old.jar is old version, don't use it.
 ### AuctionHouse jar
 To run the bank application, run **java -jar AuctionHouse-group10.jar**.
 

@@ -78,8 +78,13 @@ public class Account {
     /**
      * if a bid is lost the funds must be unlocked
      */
-    public void resetAccountHolds() {
-        moneyHeld = 0;
+    public void resetAccountHolds(double amount) {
+        if(amount >= moneyHeld){
+            moneyHeld = 0;
+        }
+        else{
+            moneyHeld-=amount;
+        }
     }
 
     /**

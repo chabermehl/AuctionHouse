@@ -1,7 +1,4 @@
 package Agent;
-
-import Bank.Message;
-
 import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
@@ -15,11 +12,10 @@ import java.util.concurrent.LinkedBlockingQueue;
  * It also receives notifications regarding the status of bids.
  */
 public class AuctionHouseProxy extends Thread{
+    private boolean terminated = false;
     private Socket socket;
-    private ObjectOutputStream out;
-    private ObjectInputStream in;
-    //private PrintWriter out;
-    //private BufferedReader in;
+    private PrintWriter out;
+    private BufferedReader in;
     private BlockingQueue<String> queue = new LinkedBlockingQueue<>();
     private BlockingQueue<String> notificationQueue = new LinkedBlockingQueue<>();
 
@@ -31,10 +27,8 @@ public class AuctionHouseProxy extends Thread{
     public AuctionHouseProxy(String ip,String port){
         try {
             socket = new Socket(ip, Integer.parseInt(port));
-            //out = new PrintWriter(socket.getOutputStream(), true);
-            //in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         }
         catch (IOException e){
             System.out.println("Error in AuctionHouseProxy");
@@ -42,6 +36,13 @@ public class AuctionHouseProxy extends Thread{
         start();
     }
 
+    /**
+     * returns the termination status
+     * @return
+     */
+    public boolean isTerminated(){
+        return terminated;
+    }
     /**
      * This function terminates the connection and all dependencies.
      */
@@ -67,33 +68,29 @@ public class AuctionHouseProxy extends Thread{
      */
     @Override
     public void run(){
-        String message="";
-        try {
-            //message = in.readLine();
-            Message m = (Message)in.readObject();
-            //message = m.dataInfo+";"+m.data;
-            message = m.data;
-        }
-        catch (IOException e){
-            System.out.println("IO Exception in AuctionHouseProxy");
-        }
-        catch (ClassNotFoundException e){
-            System.out.println("ClassNotFoundException in AuctionHouseProxy");
-        }
-        if (message.split(";")[0].equals("#")){
+        while(true) {
+            String message = "";
             try {
-                notificationQueue.put(message);
+                message = in.readLine();
+            } catch (IOException e) {
+                break;
             }
-            catch (InterruptedException e){
-                System.out.println("InterruptedException in AuctionHouseProxy");
-            }
-        }
-        else{
-            try {
-                queue.put(message);
-            }
-            catch (InterruptedException e){
-                System.out.println("InterruptedException in AuctionHouseProxy");
+            if (message.split(";")[0].equals("#")) {
+                if(message.contains("terminate")){
+                    terminated = true;
+                    terminate();
+                }
+                try {
+                    notificationQueue.put(message);
+                } catch (InterruptedException e) {
+                    System.out.println("InterruptedException in AuctionHouseProxy");
+                }
+            } else {
+                try {
+                    queue.put(message);
+                } catch (InterruptedException e) {
+                    System.out.println("InterruptedException in AuctionHouseProxy");
+                }
             }
         }
     }
@@ -131,14 +128,7 @@ public class AuctionHouseProxy extends Thread{
      * @return
      */
     private String communicate(String data){
-        String dataInfo = "";
-
-        try {
-            out.writeObject(new Message(dataInfo, data));
-        }catch (IOException e){
-            System.out.println("There is an IO exception");
-        }
-        //out.println(message);
+        out.println(data);
         String returnedVal = "";
         try {
             returnedVal = queue.take();

@@ -3,18 +3,15 @@ package Agent;
 import Bank.Message;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.net.Socket;
 import java.util.*;
 
 /**
+ * @author Farhang Rouhi
  * This class is the bank proxy. This proxy is a client. It connects to the bank
  * and make functions calls. We use serialization and send and receive the object Message.
  */
 public class BankProxy {
-    //private Socket socket;
-    //private PrintWriter out;
-    //private BufferedReader in;
     private Socket socket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
@@ -27,8 +24,6 @@ public class BankProxy {
     public BankProxy(String ip,String port){
         try {
             socket = new Socket(ip, Integer.parseInt(port));
-            //out = new PrintWriter(socket.getOutputStream(), true);
-            //in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
         }
@@ -57,8 +52,8 @@ public class BankProxy {
      * @param port
      * @return
      */
-    public String createAcount(String name,int initialBalance,String ip,String port){
-        String message = "createAccount;"+name+";"+initialBalance+";"+"Agent";
+    public String createAcount(String name,int initialBalance,String ip,String port,String type){
+        String message = "createAccount;"+name+";"+initialBalance+";"+type+";"+ip+";"+port;
         return communicate(message);
     }
 
@@ -75,11 +70,11 @@ public class BankProxy {
         }catch (IOException e){
             System.out.println("There is an IO exception in BankProxy");
         }
-        //out.println(message);
         String returnedVal = "";
         try {
             //returnedVal = in.readLine();
             Message m = (Message)in.readObject();
+            //System.out.println(m.data);
             returnedVal = m.data;
         }
         catch (IOException e){
@@ -116,18 +111,21 @@ public class BankProxy {
      * @param amount
      * @return
      */
-    public boolean lockBalance(int key,int amount){
-        String message = "freezeFunds;"+amount;
+    public boolean lockBalance(String key,double amount){
+        String message = "freezeFunds;"+key+";"+amount;
         String returnVal = communicate(message);
-        return Boolean.getBoolean(returnVal);
+        if(returnVal.contains("not")){
+            return false;
+        }
+        return true;
     }
 
     /**
      * This function releases the lock on a certain amount.
      * @param amount
      */
-    public void releaseLock(int amount){
-        String message = "unfreezeFunds;"+amount;
+    public synchronized void releaseLock(String key,double amount){
+        String message = "unfreezeFunds;"+key+";"+amount;
         String returnVal = communicate(message);
     }
 

@@ -7,6 +7,7 @@ package Bank;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * this class handles all of the bank functions from creation of accounts to holding
@@ -15,10 +16,12 @@ import java.util.Map;
 public class Bank {
     private static Map<Integer, Account> accountNumberList = new HashMap<>();
     private static Map<Integer, Account> accountBidList = new HashMap<>();
-    private static Map<String, String> auctionList = new HashMap<>();
+    private static Map<Integer, String> auctionList = new HashMap<>();
+    private static Map<String, Integer> ipList = new HashMap<>();
 
     private static int numberAccount;
     private static int bidKey;
+    private static int nextAccountNum = 0;
 
     /**
      * opens a new account with the name and initial deposit
@@ -27,12 +30,14 @@ public class Bank {
      * @param initialDeposit the initial deposit to be placed in the account
      */
     public static void openNewAccount(String accountName, double initialDeposit) {
-        int accountNumber = 12348 + accountNumberList.size() + 1;
+        int accountNumber = nextAccountNum;
+        nextAccountNum++;
         Account newAccount = new Account(accountName, accountNumber, initialDeposit);
         numberAccount = newAccount.getAccountNum();
         bidKey = newAccount.getBidKey();
         accountNumberList.put(newAccount.getAccountNum(), newAccount);
         accountBidList.put(newAccount.getBidKey(), newAccount);
+        System.out.println(">>>>>>>>>>>>>"+accountBidList.get(newAccount.getBidKey()));
     }
 
     /**
@@ -45,13 +50,23 @@ public class Bank {
      * @param hostName       host the auction is running on
      */
     public static void openNewAuctionAccount(String accountName, double initialDeposit, String port, String hostName) {
-        int accountNumber = 84321 + auctionList.size() + 1;
+        int accountNumber = nextAccountNum;
+        nextAccountNum++;
         Account newAccount = new Account(accountName, accountNumber, initialDeposit);
         numberAccount = newAccount.getAccountNum();
         accountNumberList.put(newAccount.getAccountNum(), newAccount);
-        auctionList.put(accountName, "" + accountName + "," + hostName + "," + port);
+        ipList.put(port,accountNumber);
+        auctionList.put(accountNumber, "" + accountName + "," + hostName + "," + port);
     }
 
+    /**
+     * returns account number based on the ip
+     * @param ip of the auction house
+     * @return
+     */
+    public static int getAccountNumberFromIp(String ip){
+        return ipList.get(ip);
+    }
     /**
      * gets the initialized account number
      *
@@ -77,6 +92,7 @@ public class Bank {
      */
     public static void closeAccount(int accountNumber) {
         accountNumberList.remove(accountNumber);
+        auctionList.remove(accountNumber);
     }
 
     /**
@@ -104,8 +120,8 @@ public class Bank {
      *
      * @param bidKey account to be unlocked
      */
-    public static synchronized void unlockAccount(int bidKey) {
-        accountBidList.get(bidKey).resetAccountHolds();
+    public static synchronized void unlockAccount(int bidKey,double amount) {
+        accountBidList.get(bidKey).resetAccountHolds(amount);
     }
 
     /**
@@ -127,7 +143,7 @@ public class Bank {
      * @return boolean stating whether or not theres enough cash
      */
     public static boolean hasEnoughFunds(int bidKey, double bid) {
-        return getAccount(bidKey).hasFunds(bid);
+        return accountBidList.get(bidKey).hasFunds(bid);
     }
 
     /**

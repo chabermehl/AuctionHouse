@@ -1,7 +1,7 @@
-French Fries;They're a little cold, but totally fine;1.00
-Avacado Spread;Wow, avacado is nice;50.00
+French Fries;They're a little cold but totally fine;1.00
+Avacado Spread;Wow avacado is nice;50.00
 DnD Dice;I wish I had more of these in real life;4.00
 Brand new car;The transmission doesn't actually work;500000
 Bag of groceries;I bought these and I want to sell them for more;20.00
-1 Dollar;This one's really special, trust me;10.00
+1 Dollar;This one's really special trust me;10.00
 My Friendship;I'll give you advice and stuff;0.50

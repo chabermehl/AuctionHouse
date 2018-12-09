@@ -1,237 +1,99 @@
 package AuctionHouse;
 
-import Bank.Message;
+import Agent.BankProxy;
 
-import java.io.*;
-import java.net.Inet4Address;
-import java.net.Socket;
-import java.util.LinkedList;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Scanner;
 
-/**
- * The auction house has
- */
 public class AuctionHouse {
-
-    // All of the active auctions in this house.
-    private LinkedList<Auction> currentAuctions = new LinkedList<>();
-
-    // Info for connecting to bank
-    private String bankIP;
-    private int bankPort;
-    private ObjectOutputStream oos;
-    private ObjectInputStream ois;
-    private int houseID;
-    private int accountNumber;
-    private boolean running = true;
-
-    // Socket used for talking with the bank
-    private Socket bankSocket;
-    private AuctionHouseServer ahServer;
-
-    public static void main(String[] args) {
-        if(args.length != 4) {
-            System.out.println("Invalid number of args: expected 4.\n" +
-                    "Required args: houseID, auctionServerPort, bankIp, bankport");
-            return;
+    private class Terminator extends Thread{
+        public Terminator(){
+            start();
         }
-
-        AuctionHouse auctionHouse = new AuctionHouse(Integer.parseInt(args[0]), Integer.parseInt(args[1]), args[2], Integer.parseInt(args[3]));
-        auctionHouse.run();
-    }
-
-    public AuctionHouse(int houseID, int serverPort, String bankIP, int bankPort) {
-        this.bankIP = bankIP;
-        this.bankPort = bankPort;
-        this.houseID = houseID;
-        ahServer = new AuctionHouseServer(serverPort, this);
-    }
-
-    public void run() {
-        // set up server
-        ahServer.start();
-
-        // Connect to proxy and make an account
-        boolean connectSuccess = connectToBank();
-
-        // Read in some auctions
-        readInAuctions();
-
-        getAuctionsString();
-
-        // Set up command input thread
-        AuctionCommandInput commandInput = new AuctionCommandInput(this);
-        new Thread(commandInput).start();
-
-        // The core loop for processing messages
-        while(commandInput.getActive() && connectSuccess && currentAuctions.size() > 0) {
-            Message message = readMessageFromBank();
-            if(message != null) {
-                System.out.println("Received message: " + message.dataInfo + " " + message.data);
-                String[] params = message.data.split(";");
-                // Process different messages from the bank
-                if(message.dataInfo.equals("Bank Key: ")) {
-                    // Nab our account number
-                    accountNumber = Integer.parseInt(message.data);
-                    System.out.println("Assigned a bank key: " + accountNumber);
+        @Override
+        public void run(){
+            Scanner sc = new Scanner(System.in);
+            while (true){
+                String input = sc.nextLine();
+                if(input.equals("exit") || input.equals("terminate") || input.equals("log out")){
+                    if(soldNum==winTimerMap.size()){
+                        terminate();
+                    }
+                    else{
+                        terminate = true;
+                    }
+                    System.out.println("Termination in progress");
+                    break;
                 }
             }
         }
-
-        // wait for a command to terminate
-        closeBankAccount();
-        //receiver.shutDown();
-        shutDown();
-        System.out.println("Shutdown Complete");
-        System.exit(0);
     }
+    private ServerSocket serverSocket;
+    private boolean terminate = false;
+    private int soldNum = 0;
+    private BankProxy bankProxy;
+    private Map<String,String> map;
+    private Map<String,Double> currentBidMap;
+    private Map<String,WinTimer> winTimerMap;
+    public AuctionHouse(BankProxy bankProxy,ServerSocket serverSocket){
+        this.serverSocket=serverSocket;
+        new Terminator();
+        this.bankProxy = bankProxy;
+        map = new LinkedHashMap<>();
+        currentBidMap = new LinkedHashMap<>();
+        winTimerMap = new LinkedHashMap<>();
+        map.put("French Fries","They're a little cold but totally fine;1.00");
+        map.put("Avocado Spread","Wow avocado is nice;50.00");
+        map.put("DnD Dice","I wish I had more of these in real life;4.00");
+        map.put("Brand new car","The transmission doesn't actually work;500000");
+        map.put("Bag of groceries","I bought these and I want to sell them for more;20.00");
+        map.put("1 Dollar","This one's really special trust me;10.00");
+        map.put("My Friendship","I'll give you advice and stuff;0.50");
+        for(String id:map.keySet()){
+            currentBidMap.put(id,0.0);
+        }
 
-    private Message readMessageFromBank() {
+    }
+    public void terminate(){
         try {
-            Object obj = ois.readObject();
-            if(obj != null) {
-                return (Message)obj;
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            serverSocket.close();
         }
-        return null;
-    }
-
-    /**
-     * Attempts to create a connection with the bank and sends it a createAccountMessage with 0 balance
-     */
-    public boolean connectToBank() {
-        // Try to connect to the bank
-        try {
-            bankSocket = new Socket(bankIP, bankPort);
-            oos = new ObjectOutputStream(bankSocket.getOutputStream());
-            ois = new ObjectInputStream(bankSocket.getInputStream());
-
-            // Create an account with zero balance
-            sendMessageToBank(new Message("Create account", "createAccount;AuctionHouse" +
-                    houseID + ";0;Auction;" + Inet4Address.getLocalHost().getHostAddress() + ";" + ahServer.getPort()));
-
-            System.out.println(Inet4Address.getLocalHost().getHostAddress());
-            return true;
-        } catch (IOException e) {
-            System.out.println("Error: Could not connect to bank");
-            return false;
+        catch (IOException e){
+            System.out.println("IOException in terminate in Auction house");
         }
     }
-
-    private void sendMessageToBank(Message message) {
-        try {
-            oos.writeObject(message);
-        } catch (IOException e) {
-            System.out.println("Failed to send message to bank");
-            e.printStackTrace();
+    public boolean getTerminationState(){
+        return terminate;
+    }
+    public Map<String,String> getItems(){
+        return map;
+    }
+    public double getCurrentBidAmount(String itemId){
+        return currentBidMap.get(itemId);
+    }
+    public synchronized void itemSold(String itemId){
+        currentBidMap.put(itemId,-1.0);
+        soldNum++;
+        if(terminate && soldNum==winTimerMap.size()){
+            terminate();
         }
     }
-
-    private synchronized void addAuction(Auction auction) {
-        System.out.println("Auction added. Name:" + auction.getItemName() +
-                " Description:" + auction.getDescription() + " Minimum Bid:" + auction.getMinimumBid());
-        currentAuctions.add(auction);
-        auction.start();
-    }
-
-    private void closeBankAccount() {
-        sendMessageToBank(new Message("Close Account", "closeAccount;" + accountNumber));
-    }
-
-    /**
-     * Used for removing finished bids. Sends a win message to whoever won the bid.
-     * @param auction
-     */
-    public void auctionDone(Auction auction) {
-        ahServer.getClientByKey(auction.getBidderKey()).sendMessage(new Message("Won bid!","#win;" + auction.getItemName()));
-        currentAuctions.remove(auction);
-    }
-
-    private Auction getAuctionByName(String name) {
-        for(Auction auction : currentAuctions) {
-            if(auction.getItemName().equals(name)) {
-                return auction;
+    public synchronized boolean isBidValid(String key,String itemId,double amount,AgentProxy agentProxy){
+        boolean status = bankProxy.lockBalance(key,amount);
+        if(status && currentBidMap.get(itemId)!=-1.0 && !terminate &&
+                amount>currentBidMap.get(itemId) && amount>= Double.parseDouble(map.get(itemId).split(";")[1])){
+            if(currentBidMap.get(itemId)>0){
+                winTimerMap.get(itemId).pass();
+                //winTimerMap.remove(itemId);
             }
-        }
-        return null;
-    }
-
-    /**
-     * Attempts to bid on an auction with the given key of the bidder and
-     * the amount they want to bid.
-     * @param key of the bidder
-     * @param name of the item to bid on
-     * @param amount amount to bid
-     * @return
-     */
-    public synchronized boolean bid(int key, String name, double amount) {
-        Auction auction = getAuctionByName(name);
-        if(auction == null) {return false;}
-
-        // Make sure the amount to bid is correct.
-        if(amount >= auction.getCurrentBid() + auction.getMinimumBid()) {
-            // Try to freeze funds
-            sendMessageToBank(new Message("freezeFunds", Integer.toString(key) + ";" + Double.toString(amount)));
-
-            Message msg = null;
-            try {
-                msg = (Message)ois.readObject();
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            if(msg.data.contains("not have")) {
-                return false;
-            }
-
-            // Unfreeze the last bidder's funds if they exist
-            if(auction.hasBeenBiddenOn()) {
-                sendMessageToBank(new Message("unfreezeFunds", Integer.toString(key) + Double.toString(auction.getCurrentBid())));
-            }
-
-            // Find the previous bidder by ID, send them a pass notification
-            ahServer.getClientByKey(auction.getBidderKey()).sendMessage(new Message("Passed on bid", "#pass;" + auction.getItemName()));
-
-            // Update the auction to reset it's timer
-            auction.setBid(key, amount);
+            currentBidMap.put(itemId,amount);
+            winTimerMap.put(itemId,new WinTimer(agentProxy,itemId,this,key,amount));
             return true;
         }
+        bankProxy.releaseLock(key,amount);
         return false;
-    }
-
-    // Formatted for sending messages
-    public synchronized String getAuctionsString() {
-        StringBuilder sb = new StringBuilder();
-        for(Auction auction : currentAuctions) {
-            sb.append(auction.getItemName() + "," + auction.getDescription() +
-                    "," + auction.getMinimumBid() + "," + auction.getCurrentBid() + ";");
-        }
-        return sb.toString();
-    }
-
-    private void readInAuctions() {
-        try {
-
-            InputStream file = getClass().getClassLoader().getResourceAsStream("auctions.txt");
-            InputStreamReader fileReader = new InputStreamReader(file);
-
-            //URL resource = AuctionHouse.class.getResource("auctions.text");
-            //File file = new File("resources/auctions.txt");
-            //FileReader fileReader = new FileReader(resource.toString());
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String line;
-            while ((line = bufferedReader.readLine()) != null && !line.isEmpty()) {
-                String[] params = line.split(";");
-                addAuction(new Auction(params[0], params[1], Double.parseDouble(params[2])));
-            }
-            fileReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void shutDown() {
-        ahServer.shutdown();
     }
 }

@@ -1,67 +1,58 @@
 package AuctionHouse;
 
-import Bank.Message;
+import Agent.BankProxy;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.LinkedList;
 
-/**
- * Auction House server class used as a sort of proxy, I guess.
- * Forwards messages to the actual auction house
- */
-public class AuctionHouseServer extends Thread {
-
-    private int port;
-    public AuctionHouse auctionHouse;
-    private ServerSocket serverSocket;
-    private LinkedList<AuctionClient> clients = new LinkedList<>();
-
-    public AuctionHouseServer(int port, AuctionHouse ahouse) {
-        this.port = port; this.auctionHouse = ahouse;
-    }
-    public void shutdown() {
-        for(AuctionClient client : clients) {
-            System.out.println("Shutting down client " + client.toString());
+public class AuctionHouseServer{
+    // name portNumber BankIp BankPort [optional: local ip]
+    public static void main(String [] args) {
+        LinkedList<AgentProxy> agentProxies = new LinkedList<>();
+        String accountInfo = "";
+        BankProxy bankProxy = new BankProxy(args[2],args[3]);
+        String ip = null;
+        if(args.length==5){
+            ip = args[4];
         }
-        try {
-            serverSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public void run() {
-        try {
-            serverSocket = new ServerSocket(port);
-        } catch (IOException e) {
-            //e.printStackTrace();
-        }
-
-        // Try and accept new client connections
-        while (!serverSocket.isClosed()) {
+        else {
             try {
-                Socket agentSocket = serverSocket.accept();
-                AuctionClient client = new AuctionClient(agentSocket, this);
-                clients.add(client);
-                new Thread(client).start();
-            } catch (IOException e) {
-                System.out.println("Auction House Server Socket Closed");
+                ip = InetAddress.getLocalHost().getHostAddress();
+            } catch (UnknownHostException e) {
+                System.out.println("cannot get local host address");
             }
         }
-        System.out.println("Server done running");
-    }
-
-    public AuctionClient getClientByKey(int key) {
-        for(AuctionClient client : clients) {
-            if(key == client.getAgentKey()) {
-                return client;
+        accountInfo = bankProxy.createAcount(args[0],0, ip,args[1],"Auction");
+        ServerSocket serverSocket;
+        try {
+            serverSocket = new ServerSocket(Integer.parseInt(args[1]));
+        }
+        catch (IOException e){
+            System.out.println("IOException in AuctionHouseServer");
+            return;
+        }
+        AuctionHouse auctionHouse = new AuctionHouse(bankProxy,serverSocket);
+        //  Listen  for  new  clients  forever
+        while(true) {
+            //  Create  new  thread  to  handle  each  client
+            try {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("client socket created");
+                AgentProxy  agentProxy = new AgentProxy(clientSocket,auctionHouse,bankProxy);
+                agentProxies.add(agentProxy);
+            }
+            catch (IOException e){
+                break;
             }
         }
-        return null;
+        for(AgentProxy agentProxy:agentProxies){
+            agentProxy.terminate();
+        }
+        bankProxy.closeAccount(Integer.parseInt(
+                accountInfo.split("Account Number: ")[1].split("\n")[0]));
     }
-
-    public int getPort() {return port;}
 }

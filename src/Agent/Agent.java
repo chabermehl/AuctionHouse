@@ -14,6 +14,7 @@ public class Agent{
     private static LinkedList<String> itemIDs = new LinkedList<>();
     private static LinkedList<String> auctionHouseIps;
     private static BankProxy bankProxy;
+    private static LinkedList<LinkedList<String>> items;
 
     /**
      * This class listens for notifications from the bank regarding the bids.
@@ -69,7 +70,7 @@ public class Agent{
      */
     public static void main(String []args){
         bankProxy = new BankProxy(args[2],args[3]);
-        String returnedCreatAccount = bankProxy.createAcount(args[0],Integer.parseInt(args[1]),"","");
+        String returnedCreatAccount = bankProxy.createAcount(args[0],Integer.parseInt(args[1]),"","","Agent");
         System.out.println(returnedCreatAccount);
         int acountnum = Integer.parseInt(returnedCreatAccount.split("Account Number: ")[1].split("\n")[0]);
         int key = Integer.parseInt(returnedCreatAccount.split("Bid Key: ")[1]);
@@ -105,11 +106,11 @@ public class Agent{
                     input=sc.nextLine();
                     continue;
                 }
-                if(!auctionHouseProxyMap.keySet().contains(ip)) {
+                if(!auctionHouseProxyMap.keySet().contains(ip) || auctionHouseProxyMap.get(ip).isTerminated()) {
                     auctionHouseProxyMap.put(ip,new AuctionHouseProxy(ip, port));
                 }
-                LinkedList<LinkedList<String>> items =  auctionHouseProxyMap.get(ip).getItems();
-                int num = 1;
+                items =  auctionHouseProxyMap.get(ip).getItems();
+                int num = 0;
                 for (LinkedList<String> list: items){
                     System.out.println("num. houseId, itemId, description, minimumBid, currentBid");
                     System.out.print(num+". "+id+", ");
@@ -119,7 +120,6 @@ public class Agent{
                     System.out.println();
                     num++;
                 }
-                auctionHouseProxyMap.remove(ip).terminate();
             }
             // bid on itemId for amount in auctionhouse
             else if(input.contains("bid on")){
@@ -127,12 +127,14 @@ public class Agent{
                 String [] str2 = input.split("for ");
                 String [] str3 = input.split("in ");
                 String itemId = "";
+                String itemNum = "";
                 double amount = 0;
                 String auctionHouse = "";
                 String ip;
                 String port;
                 try {
-                    itemId = str[1].split(" ")[0];
+                    itemNum = str[1].split(" ")[0];
+                    itemId = items.get(Integer.parseInt(itemNum)).get(0);
                     amount = Double.parseDouble(str2[1].split(" ")[0]);
                     auctionHouse = str3[1];
                     ip = auctionHouses.get(Integer.parseInt(auctionHouse)).get(2);
@@ -143,7 +145,7 @@ public class Agent{
                     input=sc.nextLine();
                     continue;
                 }
-                if(!auctionHouseProxyMap.keySet().contains(ip)) {
+                if(!auctionHouseProxyMap.keySet().contains(ip) || auctionHouseProxyMap.get(ip).isTerminated()) {
                     auctionHouseProxyMap.put(ip,new AuctionHouseProxy(ip, port));
                 }
                 boolean status = auctionHouseProxyMap.get(ip).bid(key,itemId,amount);
@@ -155,7 +157,7 @@ public class Agent{
                 else{
                     System.out.println("Bid was accepted");
                 }
-                notificationListenerMap.put(ip,new NotificationListener(auctionHouseProxyMap.get(ip),ip+"/"+itemId,amount));
+                notificationListenerMap.put(ip+"/"+itemId,new NotificationListener(auctionHouseProxyMap.get(ip),ip+"/"+itemId,amount));
             }
             input=sc.nextLine();
         }

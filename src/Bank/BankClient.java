@@ -83,7 +83,7 @@ public class BankClient implements Runnable {
                         //primarily used by the auction house when a bid has been made
                         //checks if the agent has enough to make a bid then freezes the funds
                         //returns a message one way or the other
-                    } else if (message.data.contains("freezeFunds")) {
+                    } else if (message.data.contains("freezeFunds") && !message.data.contains("unfreezeFunds")) {
                         int accountNumber = Integer.parseInt(inMessage[1]);
                         double amount = Double.parseDouble(inMessage[2]);
                         String checkFlag;
@@ -100,7 +100,7 @@ public class BankClient implements Runnable {
                         //makes a transfer from one account to the other
                     } else if (message.data.contains("Transfer")) {
                         int accountNumA = Bank.getAccountNumber();
-                        int accountNumB = Integer.parseInt(inMessage[1]);
+                        int accountNumB = Bank.getAccountNumberFromIp(inMessage[1]);
                         double amount = Double.parseDouble(inMessage[2]);
                         Bank.moveMoney(accountNumA, accountNumB, amount);
                         message = new Message("nothing", "transfer complete");
@@ -110,7 +110,7 @@ public class BankClient implements Runnable {
                         log(Bank.getAuctionString());
                         //unfreezes funds if a bid is passed so that the agent can make a new bid
                     } else if (message.data.contains("unfreezeFunds")) {
-                        Bank.unlockAccount(Integer.parseInt(inMessage[0]));
+                        Bank.unlockAccount(Integer.parseInt(inMessage[1]),Double.parseDouble(inMessage[2]));
                         log("Account Funds Unlocked");
                         //closes account when prompted to
                     } else if (message.data.contains("closeAccount")) {

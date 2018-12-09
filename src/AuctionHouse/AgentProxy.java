@@ -84,7 +84,6 @@ public class AgentProxy extends Thread{
         while (true) {
             try {
                 message = in.readLine();
-                System.out.println(message);
                 if(message==null){
                     in.close();
                     out.close();
@@ -110,6 +109,8 @@ public class AgentProxy extends Thread{
                 } else {
                     returnVal = "reject";
                 }
+            } else if(message.split(";")[0].equals("receipt")){
+                auctionHouse.updateReceiptNum();
             }
 
             try {

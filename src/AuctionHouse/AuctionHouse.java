@@ -33,6 +33,7 @@ public class AuctionHouse {
     }
     private ServerSocket serverSocket;
     private boolean terminate = false;
+    private int receivedReceipts = 0;
     private int soldNum = 0;
     private BankProxy bankProxy;
     private Map<String,String> map;
@@ -77,7 +78,13 @@ public class AuctionHouse {
     public synchronized void itemSold(String itemId){
         currentBidMap.put(itemId,-1.0);
         soldNum++;
-        if(terminate && soldNum==winTimerMap.size()){
+        if(terminate && soldNum==winTimerMap.size() && soldNum==receivedReceipts){
+            terminate();
+        }
+    }
+    public void updateReceiptNum(){
+        receivedReceipts++;
+        if(terminate && soldNum==winTimerMap.size() && soldNum==receivedReceipts){
             terminate();
         }
     }

@@ -42,6 +42,7 @@ public class Agent{
                     System.out.println("You won the bid on item "+id.split("/")[1]+
                             " in "+id.split("/")[0]+" for "+amount+" dollars");
                     bankProxy.transferMoney(id.split("/")[0],amount);
+                    auctionHouseProxy.sendReceipt();
                     System.out.println("Money was successfully transferred");
                 }
                 else if(notification.contains("pass")){

@@ -170,4 +170,8 @@ public class AuctionHouseProxy extends Thread{
         }
         return list;
     }
+    public void sendReceipt(){
+        String message = "receipt";
+        String returnVal = communicate(message);
+    }
 }

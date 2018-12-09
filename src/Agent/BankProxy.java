@@ -124,7 +124,7 @@ public class BankProxy {
      * This function releases the lock on a certain amount.
      * @param amount
      */
-    public void releaseLock(String key,double amount){
+    public synchronized void releaseLock(String key,double amount){
         String message = "unfreezeFunds;"+key+";"+amount;
         String returnVal = communicate(message);
     }

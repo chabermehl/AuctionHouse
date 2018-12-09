@@ -9,8 +9,14 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 
+/**
+ * This is the server and waits for agents to come an connect.
+ */
 public class AuctionHouseServer{
-    // name portNumber BankIp BankPort [optional: local ip]
+    /**
+     * This is the server and waits for agents to come an connect.
+     * @param args name portNumber BankIp BankPort [optional: local ip]
+     */
     public static void main(String [] args) {
         LinkedList<AgentProxy> agentProxies = new LinkedList<>();
         String accountInfo = "";

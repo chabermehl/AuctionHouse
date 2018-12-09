@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 /**
+ * @author Farhang Rouhi
  * This is the agent class and includes all of the logic associated with the agent.
  */
 public class Agent{

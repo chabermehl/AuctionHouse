@@ -8,11 +8,28 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ * This class handles the general logic related to the auction house.
+ * It is also in charge of the main book keeping.
+ */
 public class AuctionHouse {
+    /**
+     * This private class terminated the auction house smoothly.
+     */
     private class Terminator extends Thread{
+        /**
+         * This starts the thread.
+         */
         public Terminator(){
             start();
         }
+
+        /**
+         * This is the run function of the thread.
+         * It handles the logic related to termination.
+         * In termination, we wait for all bids to get closed, and
+         * we also wait to receive all of the transferred monies.
+         */
         @Override
         public void run(){
             Scanner sc = new Scanner(System.in);
@@ -39,6 +56,13 @@ public class AuctionHouse {
     private Map<String,String> map;
     private Map<String,Double> currentBidMap;
     private Map<String,WinTimer> winTimerMap;
+
+    /**
+     * This is my auction house instructor.
+     * It initialises every thing, but also, it creates some items.
+     * @param bankProxy
+     * @param serverSocket
+     */
     public AuctionHouse(BankProxy bankProxy,ServerSocket serverSocket){
         this.serverSocket=serverSocket;
         new Terminator();
@@ -58,6 +82,10 @@ public class AuctionHouse {
         }
 
     }
+
+    /**
+     * This terminates ONLY the auction house threads.
+     */
     public void terminate(){
         try {
             serverSocket.close();
@@ -66,15 +94,36 @@ public class AuctionHouse {
             System.out.println("IOException in terminate in Auction house");
         }
     }
+
+    /**
+     * This returns the termination status.
+     * @return
+     */
     public boolean getTerminationState(){
         return terminate;
     }
+
+    /**
+     * This returns the map of all items.
+     * @return
+     */
     public Map<String,String> getItems(){
         return map;
     }
+
+    /**
+     * This one returns current bid amount for an item.
+     * @param itemId
+     * @return
+     */
     public double getCurrentBidAmount(String itemId){
         return currentBidMap.get(itemId);
     }
+
+    /**
+     * This one is called whenever an item is sold for bok keeping.
+     * @param itemId
+     */
     public synchronized void itemSold(String itemId){
         currentBidMap.put(itemId,-1.0);
         soldNum++;
@@ -82,12 +131,25 @@ public class AuctionHouse {
             terminate();
         }
     }
-    public void updateReceiptNum(){
+
+    /**
+     * This one is called whenever a receipt is received for bok keeping.
+     */
+    public synchronized void updateReceiptNum(){
         receivedReceipts++;
         if(terminate && soldNum==winTimerMap.size() && soldNum==receivedReceipts){
             terminate();
         }
     }
+
+    /**
+     * This function determines if the bid is valid ro not. If it is, it wil process the bid.
+     * @param key
+     * @param itemId
+     * @param amount
+     * @param agentProxy
+     * @return
+     */
     public synchronized boolean isBidValid(String key,String itemId,double amount,AgentProxy agentProxy){
         boolean status = bankProxy.lockBalance(key,amount);
         if(status && currentBidMap.get(itemId)!=-1.0 && !terminate &&

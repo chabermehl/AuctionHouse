@@ -9,7 +9,13 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * This is the agent proxy that talks to the agent.
+ */
 public class AgentProxy extends Thread{
+    /**
+     * This class sends messages from a blocking queue.
+     */
     private class MessageSender extends Thread{
         PrintWriter out;
         AgentProxy agentProxy;
@@ -18,6 +24,10 @@ public class AgentProxy extends Thread{
             this.agentProxy = agentProxy;
             start();
         }
+
+        /**
+         * This sends messages and can cleanly terminate.
+         */
         @Override
         public void run(){
             while(true) {
@@ -35,6 +45,13 @@ public class AgentProxy extends Thread{
     private AuctionHouse auctionHouse;
     private BankProxy bankProxy;
     private boolean terminated = false;
+
+    /**
+     * This is the constructor that creates the in and out buffers.
+     * @param socket
+     * @param auctionHouse
+     * @param bankProxy
+     */
     public AgentProxy(Socket socket, AuctionHouse auctionHouse, BankProxy bankProxy){
         this.auctionHouse = auctionHouse;
         this.bankProxy=bankProxy;
@@ -48,6 +65,10 @@ public class AgentProxy extends Thread{
         new MessageSender(out,this);
         start();
     }
+
+    /**
+     * This terminates this part of the auction house.
+     */
     public void terminate(){
         if(!terminated) {
             try {
@@ -59,6 +80,14 @@ public class AgentProxy extends Thread{
             }
         }
     }
+
+    /**
+     * This will send notifications to the agent regarding the status of the bids.
+     * @param notification
+     * @param itemId
+     * @param key
+     * @param amount
+     */
     public void sendNotification(String notification,String itemId,String key,double amount){
         try {
             bankProxy.releaseLock(key,amount);
@@ -68,6 +97,11 @@ public class AgentProxy extends Thread{
             System.out.println("InterruptedException in sendNotification");
         }
     }
+
+    /**
+     * This returnes next message from a queue.
+     * @return
+     */
     public Message getNextMessage(){
         Message message = null;
         try {
@@ -78,6 +112,10 @@ public class AgentProxy extends Thread{
         }
         return message;
     }
+
+    /**
+     * This waits for messages and puts them in a blocking queue.
+     */
     @Override
     public void run(){
         String message = "";
@@ -120,6 +158,11 @@ public class AgentProxy extends Thread{
             }
         }
     }
+
+    /**
+     * This sends the list of all available items to the agent.
+     * @return
+     */
     private String getItems(){
         if(auctionHouse.getTerminationState()){
             return "";

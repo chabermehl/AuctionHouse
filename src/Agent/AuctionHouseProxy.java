@@ -7,8 +7,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
+ * @author Farhang Rouhi
  * This class is the auction house proxy. This proxy is a client. It connects to the bank
- * and make functions calls. We use serialization and send and receive the object Message.
+ * and make functions calls. I use simple texts and send and receive the Strings for this connection.
  * It also receives notifications regarding the status of bids.
  */
 public class AuctionHouseProxy extends Thread{
@@ -170,6 +171,10 @@ public class AuctionHouseProxy extends Thread{
         }
         return list;
     }
+
+    /**
+     * This function sendsReceipt of transaction to the auction house.
+     */
     public void sendReceipt(){
         String message = "receipt";
         String returnVal = communicate(message);

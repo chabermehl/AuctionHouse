@@ -190,7 +190,7 @@ public class Bank {
     public static String getAuctionString() {
         String auctionString = "";
         for (String value : auctionList.values()) {
-            auctionString = value + ";";
+            auctionString += value + ";";
         }
         return auctionString;
     }
